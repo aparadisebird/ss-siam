@@ -415,8 +415,29 @@
         </div>
     </div>
 
-    <!-- JavaScript for Modal Functionality (Frontend Only) -->
+    <!-- JavaScript for Modal Functionality and Firebase Integration -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+
     <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCGY3j4yIpHMkc4DOcFBhzs2hfEVsw0VJ0",
+            authDomain: "siamwebsite2022.firebaseapp.com",
+            projectId: "siamwebsite2022",
+            storageBucket: "siamwebsite2022.firebasestorage.app",
+            messagingSenderId: "964747721403",
+            appId: "1:964747721403:web:1860b8c0533bcf6d6cc79e"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = app.firestore();
+        const auth = app.auth();
+        const storage = app.storage(); // Initialize Storage even if using external links, as you might use it later
+
         // Function to show a modal
         function showModal(modalId) {
             document.getElementById(modalId).classList.remove('hidden');
@@ -433,27 +454,57 @@
             showModal('bkashModal');
         }
 
-        // Simulate Bkash order submission (no actual backend processing)
-        function submitBkashOrder() {
+        // Function to submit Bkash order to Firestore
+        async function submitBkashOrder() {
             const docTitle = document.getElementById('bkashDocTitle').textContent;
             const buyerName = document.getElementById('buyerNameBkash').value;
             const buyerEmail = document.getElementById('buyerEmailBkash').value;
             const trxId = document.getElementById('trxId').value;
 
             if (!buyerName || !buyerEmail || !trxId) {
-                alert('Please fill in all fields.'); // Using alert for demo, replace with custom modal
+                // In a real app, use a custom modal for user feedback instead of alert()
+                alert('Please fill in all fields.');
                 return;
             }
 
-            // In a real application, this data would be sent to your backend server
-            console.log(`Bkash Order for: ${docTitle}`);
-            console.log(`Name: ${buyerName}, Email: ${buyerEmail}, TrxID: ${trxId}`);
-            alert('Your order has been submitted! You will receive an email upon verification. (This is a simulation)'); // Using alert for demo, replace with custom modal
-            closeModal('bkashModal');
-            // Clear the form fields after submission
-            document.getElementById('buyerNameBkash').value = '';
-            document.getElementById('buyerEmailBkash').value = '';
-            document.getElementById('trxId').value = '';
+            // Simulate user authentication for order submission (anonymous sign-in)
+            // In a real scenario, you might want more robust user login
+            let userId = null;
+            try {
+                // Sign in anonymously to get a user ID for Firestore security rules
+                const userCredential = await auth.signInAnonymously();
+                userId = userCredential.user.uid;
+                console.log("Signed in anonymously with UID:", userId);
+            } catch (error) {
+                console.error("Error signing in anonymously:", error);
+                // In a real app, use a custom modal for user feedback
+                alert("Could not process your request due to an authentication error. Please try again.");
+                return;
+            }
+
+            // Add the order to Firestore
+            try {
+                await db.collection('bkashOrders').add({
+                    documentName: docTitle,
+                    buyerName: buyerName,
+                    buyerEmail: buyerEmail,
+                    bkashTrxId: trxId,
+                    orderDate: new Date().toISOString(), // Store current date/time
+                    status: 'pending', // Initial status
+                    userId: userId // Store the anonymous user's UID
+                });
+                // In a real app, use a custom modal for user feedback
+                alert('Your order has been submitted! You will receive an email upon verification. Thank you!');
+                closeModal('bkashModal');
+                // Clear the form fields after submission
+                document.getElementById('buyerNameBkash').value = '';
+                document.getElementById('buyerEmailBkash').value = '';
+                document.getElementById('trxId').value = '';
+            } catch (error) {
+                console.error("Error adding document to Firestore:", error);
+                // In a real app, use a custom modal for user feedback
+                alert("There was an error submitting your order. Please try again.");
+            }
         }
 
         // Show Ad modal
@@ -472,7 +523,9 @@
         // Simulate document access after ad (no actual document loading)
         function accessDocumentAfterAd() {
             const docTitle = document.getElementById('adDocTitle').textContent;
-            alert(`Document "${docTitle}" is now accessible! (This is a simulation)`); // Using alert for demo, replace with custom modal
+            // In a real application, you would fetch the document's direct link from Firestore
+            // and redirect the user or load it here.
+            alert(`Document "${docTitle}" is now accessible! (This is a simulation, in real app, doc would load/download)`); // Using alert for demo, replace with custom modal
             closeModal('adModal');
         }
 

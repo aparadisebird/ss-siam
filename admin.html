@@ -244,7 +244,18 @@
                             <input type="url" id="docExternalDownloadUrl" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
                             <p class="text-sm text-gray-500 mt-1">Provide a direct public link if using external storage (e.g., Google Drive, Dropbox).</p>
                         </div>
-                        <!-- Access type selection removed as per user request -->
+                        <!-- New: Checkboxes for Access Options -->
+                        <div class="mb-6">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Access Options:</label>
+                            <div class="flex items-center mb-2">
+                                <input type="checkbox" id="allowBkash" class="form-checkbox h-5 w-5 text-indigo-600 rounded">
+                                <label for="allowBkash" class="ml-2 text-gray-700">Allow Bkash Payment</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="allowAd" class="form-checkbox h-5 w-5 text-yellow-500 rounded">
+                                <label for="allowAd" class="ml-2 text-gray-700">Allow Watch Ad to Access</label>
+                            </div>
+                        </div>
                         <div class="flex space-x-4">
                             <button id="saveDocButton" class="btn-primary">Save Document</button>
                             <button id="cancelEditDocButton" class="btn-secondary hidden">Cancel Edit</button>
@@ -300,7 +311,6 @@
 
         // --- Admin UID ---
         // IMPORTANT: Replace this with your actual Firebase Admin User UID.
-        // You obtained this in Step 2.D of the setup guide.
         const ADMIN_UID = 'z2MTiFRlTGcDYIaft5zxkjBM8rS2';
 
         // --- DOM Elements ---
@@ -342,6 +352,10 @@
         const docPagesInput = document.getElementById('docPages');
         const docPreviewImageUrlInput = document.getElementById('docPreviewImageUrl');
         const docExternalDownloadUrlInput = document.getElementById('docExternalDownloadUrl');
+        // New checkbox elements
+        const allowBkashCheckbox = document.getElementById('allowBkash');
+        const allowAdCheckbox = document.getElementById('allowAd');
+
         const saveDocButton = document.getElementById('saveDocButton');
         const cancelEditDocButton = document.getElementById('cancelEditDocButton');
         const premiumDocumentsList = document.getElementById('premiumDocumentsList');
@@ -390,6 +404,8 @@
             docPagesInput.value = '';
             docPreviewImageUrlInput.value = '';
             docExternalDownloadUrlInput.value = '';
+            allowBkashCheckbox.checked = false; // Clear checkbox
+            allowAdCheckbox.checked = false; // Clear checkbox
             saveDocButton.textContent = 'Save Document';
             cancelEditDocButton.classList.add('hidden');
         }
@@ -629,6 +645,7 @@
                                 <h5 class="text-xl font-semibold text-gray-800">${document.name}</h5>
                                 <p class="text-gray-600 text-sm">Price: BDT ${document.priceBDT} | Pages: ${document.pages}</p>
                                 <p class="text-gray-500 text-xs mt-1">Link: <span class="font-mono truncate w-80 inline-block">${document.externalDownloadUrl || 'N/A'}</span></p>
+                                <p class="text-gray-500 text-xs">Bkash: ${document.allowBkash ? 'Yes' : 'No'} | Ad: ${document.allowAd ? 'Yes' : 'No'}</p>
                             </div>
                             <div class="flex space-x-2">
                                 <button onclick="editDocument('${docId}')" class="btn-secondary text-sm">Edit</button>
@@ -653,6 +670,8 @@
             const pages = parseInt(docPagesInput.value);
             const previewImageUrl = docPreviewImageUrlInput.value.trim();
             const externalDownloadUrl = docExternalDownloadUrlInput.value.trim();
+            const allowBkash = allowBkashCheckbox.checked; // Get checkbox value
+            const allowAd = allowAdCheckbox.checked; // Get checkbox value
 
             if (!name || !description || isNaN(priceBDT) || isNaN(pages) || !previewImageUrl) {
                 showMessage('Please fill in all required document fields and ensure price/pages are numbers.', 'error');
@@ -665,8 +684,9 @@
                 priceBDT,
                 pages,
                 previewImageUrl,
-                externalDownloadUrl: externalDownloadUrl || '', // Store empty string if no URL provided
-                accessType: 'bkash_payment' // Defaulting to bkash_payment, as it's not managed here, but needed for homepage logic
+                externalDownloadUrl: externalDownloadUrl || '',
+                allowBkash: allowBkash, // Save checkbox value
+                allowAd: allowAd // Save checkbox value
             };
 
             try {
@@ -700,6 +720,8 @@
                     docPagesInput.value = document.pages;
                     docPreviewImageUrlInput.value = document.previewImageUrl;
                     docExternalDownloadUrlInput.value = document.externalDownloadUrl || '';
+                    allowBkashCheckbox.checked = !!document.allowBkash; // Set checkbox based on stored value
+                    allowAdCheckbox.checked = !!document.allowAd; // Set checkbox based on stored value
                     saveDocButton.textContent = 'Update Document';
                     cancelEditDocButton.classList.remove('hidden');
                     // Scroll to top of form

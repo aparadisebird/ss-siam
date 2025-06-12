@@ -30,6 +30,26 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
+        /* Basic styling for content within the blog post */
+        .prose p {
+            margin-bottom: 1em;
+        }
+        .prose ul, .prose ol {
+            margin-bottom: 1em;
+            padding-left: 1.5em;
+        }
+        .prose li {
+            margin-bottom: 0.5em;
+        }
+        .prose h1, .prose h2, .prose h3, .prose h4 {
+            margin-top: 1.5em;
+            margin-bottom: 0.75em;
+            font-weight: bold;
+        }
+        .prose h1 { font-size: 2.25em; }
+        .prose h2 { font-size: 1.75em; }
+        .prose h3 { font-size: 1.5em; }
+        .prose h4 { font-size: 1.25em; }
     </style>
 </head>
 <body>
@@ -142,7 +162,9 @@
                     </div>
                     <div class="prose max-w-none text-gray-800 leading-relaxed text-lg">
                         <p>${post.content}</p>
-                        <!-- For long content, consider using a markdown parser or rich text editor for better rendering -->
+                        <!-- Note: For rich content (like multiple paragraphs, lists, bold text etc.),
+                             you would typically use a Markdown parser or a rich text editor library.
+                             Currently, all content is wrapped in a single <p> tag. -->
                     </div>
                     <div class="mt-10 pt-6 border-t border-gray-200">
                         <a href="index.html#blog" class="inline-block bg-indigo-600 text-white hover:bg-indigo-700 px-6 py-3 rounded-md text-base font-semibold shadow-md transition duration-300">

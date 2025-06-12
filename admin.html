@@ -88,7 +88,7 @@
                         <input type="text" id="blogTitle" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
                     </div>
                     <div class="mb-4">
-                        <label for="blogSlug" class="block text-gray-700 text-sm font-bold mb-2">Slug (URL friendly)</label>
+                        <label for="blogSlug" class="block text-gray-700 text-sm font-bold mb-2">Slug (URL friendly, auto-generated if empty)</label>
                         <input type="text" id="blogSlug" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md" placeholder="e.g., my-first-blog-post">
                     </div>
                     <div class="mb-4">
@@ -270,6 +270,16 @@
             }, 3000);
         }
 
+        // Function to generate a URL-friendly slug
+        function generateSlug(title) {
+            return title
+                .toLowerCase()
+                .trim()
+                .replace(/[^\w\s-]/g, '') // Remove all non-word chars except spaces and hyphens
+                .replace(/[\s_-]+/g, '-') // Replace spaces and multiple hyphens with a single hyphen
+                .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+        }
+
         function clearBlogPostForm() {
             blogFormTitle.textContent = 'Add New Blog Post';
             blogPostIdInput.value = '';
@@ -371,6 +381,7 @@
                             <div>
                                 <h5 class="text-xl font-semibold text-gray-800">${post.title}</h5>
                                 <p class="text-gray-600 text-sm">By ${post.author} | ${new Date(post.date).toLocaleDateString()} | ${post.readTime}</p>
+                                <p class="text-gray-500 text-xs mt-1">Slug: <span class="font-mono">${post.slug || 'N/A'}</span></p>
                             </div>
                             <div class="flex space-x-2">
                                 <button onclick="editBlogPost('${postId}')" class="btn-secondary text-sm">Edit</button>
@@ -390,24 +401,29 @@
         saveBlogPostButton.addEventListener('click', async () => {
             const postId = blogPostIdInput.value;
             const title = blogTitleInput.value.trim();
-            const slug = blogSlugInput.value.trim();
+            let slug = blogSlugInput.value.trim(); // Use let as slug might be updated
             const content = blogContentInput.value.trim();
             const author = blogAuthorInput.value.trim();
             const readTime = blogReadTimeInput.value.trim();
             const imageUrl = blogImageUrlInput.value.trim();
 
-            if (!title || !slug || !content || !author || !readTime) {
-                showMessage('Please fill in all required blog post fields.', 'error');
+            if (!title || !content || !author || !readTime) {
+                showMessage('Please fill in all required blog post fields (Title, Content, Author, Read Time).', 'error');
                 return;
+            }
+
+            // Auto-generate slug if not provided
+            if (!slug) {
+                slug = generateSlug(title);
             }
 
             const blogPostData = {
                 title,
-                slug,
+                slug, // Ensure slug is saved
                 content,
                 author,
                 readTime,
-                imageUrl,
+                imageUrl: imageUrl || 'https://placehold.co/600x400/9ca3af/ffffff?text=Blog+Image', // Default image if none provided
                 date: new Date().toISOString() // Update date on save/edit
             };
 
@@ -418,6 +434,12 @@
                     showMessage('Blog post updated successfully!', 'success');
                 } else {
                     // Add new post
+                    // Optional: Check if slug already exists before adding
+                    const existingSlug = await db.collection('blogPosts').where('slug', '==', slug).limit(1).get();
+                    if (!existingSlug.empty) {
+                        showMessage('A blog post with this slug already exists. Please choose a different slug or edit the existing post.', 'error');
+                        return;
+                    }
                     await db.collection('blogPosts').add(blogPostData);
                     showMessage('New blog post added successfully!', 'success');
                 }
@@ -437,7 +459,7 @@
                     blogFormTitle.textContent = 'Edit Blog Post';
                     blogPostIdInput.value = postId;
                     blogTitleInput.value = post.title;
-                    blogSlugInput.value = post.slug;
+                    blogSlugInput.value = post.slug || ''; // Ensure slug field is populated
                     blogContentInput.value = post.content;
                     blogAuthorInput.value = post.author;
                     blogReadTimeInput.value = post.readTime;
@@ -490,7 +512,7 @@
                             <div>
                                 <h5 class="text-xl font-semibold text-gray-800">${document.name}</h5>
                                 <p class="text-gray-600 text-sm">Price: BDT ${document.priceBDT} | Pages: ${document.pages} | Access: ${document.accessType.replace('_', ' ')}</p>
-                                <p class="text-gray-500 text-xs truncate w-80">Link: ${document.externalDownloadUrl || 'N/A'}</p>
+                                <p class="text-gray-500 text-xs mt-1">Link: <span class="font-mono truncate w-80 inline-block">${document.externalDownloadUrl || 'N/A'}</span></p>
                             </div>
                             <div class="flex space-x-2">
                                 <button onclick="editDocument('${docId}')" class="btn-secondary text-sm">Edit</button>
@@ -656,14 +678,14 @@
                 return;
             }
             // Optional: Confirm with the user if the link is correct
-            if (confirm(`Approve order ${orderId} and send this link: ${downloadLink}?`)) {
+            if (confirm('Are you sure you want to approve this order? The download link will be recorded.')) {
                 try {
                     await db.collection('bkashOrders').doc(orderId).update({
                         status: 'approved',
                         generatedDownloadLink: downloadLink,
                         approvalDate: new Date().toISOString()
                     });
-                    showMessage('Order approved successfully! Remember to manually send the email to the buyer.', 'success');
+                    showMessage('Order approved successfully! Remember to manually send the email to the buyer with the link.', 'success');
                 } catch (error) {
                     console.error("Error approving order:", error);
                     showMessage('Error approving order.', 'error');

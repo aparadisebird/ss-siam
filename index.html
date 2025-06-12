@@ -353,7 +353,7 @@
                     // Conditionally render buttons based on new boolean fields
                     if (document.allowBkash) {
                         buttonsHtml += `
-                            <button onclick="showBkashPaymentModal('${document.name}')" class="w-full bg-indigo-600 text-white hover:bg-indigo-700 px-6 py-3 rounded-lg font-semibold shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                            <button onclick="showBkashPaymentModal('${document.name}')" class="w-full bg-indigo-600 text-white hover:bg-indigo-700 px-6 py-3 rounded-lg font-semibold shadow-lg transform hover:scale-105 transition duration-300 ease-in-out mb-2">
                                 Buy via Bkash
                             </button>
                         `;
@@ -365,6 +365,11 @@
                             </button>
                         `;
                     }
+                    // If neither option is allowed, you could show a "Not Available" message or similar
+                    if (!document.allowBkash && !document.allowAd) {
+                        buttonsHtml = '<p class="text-gray-500 text-center text-sm">Access options not available.</p>';
+                    }
+
 
                     const docElement = `
                         <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">

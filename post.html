@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Loading Blog Post...</title>
+    <!-- Load Tailwind CSS from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Apply Inter font globally and set a base text color */
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #333; /* Dark gray for good readability */
+            background-color: #f9fafb; /* Light gray background */
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section (Similar to homepage for consistent navigation) -->
+    <header class="bg-white shadow-md p-4 sticky top-0 z-50 rounded-b-lg">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <!-- Logo/Site Title -->
+            <a href="index.html" class="text-3xl font-bold text-indigo-700 hover:text-indigo-900 transition duration-300">
+                Siam's Insight
+            </a>
+
+            <!-- Navigation Menu -->
+            <nav class="mt-4 md:mt-0">
+                <ul class="flex flex-wrap justify-center space-x-4 md:space-x-8">
+                    <li><a href="index.html#home" class="text-gray-700 hover:text-indigo-600 font-medium transition duration-300 p-2 rounded-md">Home</a></li>
+                    <li><a href="index.html#blog" class="text-gray-700 hover:text-indigo-600 font-medium transition duration-300 p-2 rounded-md">Blog</a></li>
+                    <li><a href="index.html#premium-notes" class="text-gray-700 hover:text-indigo-600 font-medium transition duration-300 p-2 rounded-md">Premium Notes</a></li>
+                    <li><a href="index.html#about" class="text-gray-700 hover:text-indigo-600 font-medium transition duration-300 p-2 rounded-md">About</a></li>
+                    <li><a href="index.html#contact" class="text-gray-700 hover:text-indigo-600 font-medium transition duration-300 p-2 rounded-md">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Blog Post Content Section -->
+    <section class="container mx-auto py-12 px-4">
+        <div id="blogPostContent" class="bg-white p-8 rounded-lg shadow-xl">
+            <!-- Content will be loaded here by JavaScript -->
+            <p class="text-center text-gray-600 text-lg">Loading blog post...</p>
+        </div>
+    </section>
+
+    <!-- Footer Section (Same as homepage for consistency) -->
+    <footer class="bg-gray-800 text-white py-8 px-4 text-center rounded-t-lg mt-4">
+        <div class="container mx-auto">
+            <p class="mb-4">&copy; 2025 Shifat Shahriar Siam. All rights reserved.</p>
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="#" class="text-gray-400 hover:text-white transition duration-300">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-white transition duration-300">Terms of Service</a>
+            </div>
+            <p class="text-sm text-gray-500">Built with passion for Public Health and Education.</p>
+        </div>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCGY3j4yIpHMkc4DOcFBhzs2hfEVsw0VJ0",
+            authDomain: "siamwebsite2022.firebaseapp.com",
+            projectId: "siamwebsite2022",
+            storageBucket: "siamwebsite2022.firebasestorage.app",
+            messagingSenderId: "964747721403",
+            appId: "1:964747721403:web:1860b8c0533bcf6d6cc79e"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = app.firestore();
+
+        // DOM Elements
+        const blogPostContentDiv = document.getElementById('blogPostContent');
+        const pageTitle = document.getElementById('pageTitle');
+
+        // Function to get query parameter from URL
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // Load specific blog post based on slug
+        async function loadBlogPost() {
+            const postSlug = getQueryParam('slug'); // Get the slug from the URL
+            if (!postSlug) {
+                blogPostContentDiv.innerHTML = '<h2 class="text-2xl font-bold text-red-600 text-center">Error: Blog post not specified.</h2><p class="text-center text-gray-600 mt-4">Please go back to the <a href="index.html#blog" class="text-indigo-600 hover:underline">blog list</a>.</p>';
+                pageTitle.textContent = 'Error - Siam\'s Insight';
+                return;
+            }
+
+            try {
+                // Query Firestore to find the document with the matching slug
+                const snapshot = await db.collection('blogPosts').where('slug', '==', postSlug).limit(1).get();
+
+                if (snapshot.empty) {
+                    blogPostContentDiv.innerHTML = `
+                        <h2 class="text-2xl font-bold text-red-600 text-center">Blog post not found.</h2>
+                        <p class="text-center text-gray-600 mt-4">The post "${postSlug}" could not be found. Please check the URL or go back to the <a href="index.html#blog" class="text-indigo-600 hover:underline">blog list</a>.</p>
+                    `;
+                    pageTitle.textContent = 'Post Not Found - Siam\'s Insight';
+                    return;
+                }
+
+                const doc = snapshot.docs[0]; // Get the first (and only) matching document
+                const post = doc.data();
+
+                // Format date for display
+                const postDate = new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+                // Populate the page with blog post data
+                blogPostContentDiv.innerHTML = `
+                    <div class="mb-8">
+                        <img src="${post.imageUrl || 'https://placehold.co/800x400/9ca3af/ffffff?text=Blog+Image'}" alt="${post.title}" class="w-full h-auto max-h-96 object-cover rounded-lg mb-6 shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/800x400/9ca3af/ffffff?text=Image+Missing';">
+                        <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">${post.title}</h1>
+                        <p class="text-lg text-gray-600 mb-6">By ${post.author} on ${postDate} &bull; ${post.readTime}</p>
+                    </div>
+                    <div class="prose max-w-none text-gray-800 leading-relaxed text-lg">
+                        <p>${post.content}</p>
+                        <!-- For long content, consider using a markdown parser or rich text editor for better rendering -->
+                    </div>
+                    <div class="mt-10 pt-6 border-t border-gray-200">
+                        <a href="index.html#blog" class="inline-block bg-indigo-600 text-white hover:bg-indigo-700 px-6 py-3 rounded-md text-base font-semibold shadow-md transition duration-300">
+                            &larr; Back to all Blogs
+                        </a>
+                    </div>
+                `;
+                pageTitle.textContent = `${post.title} - Siam's Insight`; // Update browser tab title
+
+            } catch (error) {
+                console.error("Error loading blog post:", error);
+                blogPostContentDiv.innerHTML = '<h2 class="text-2xl font-bold text-red-600 text-center">Error loading blog post.</h2><p class="text-center text-gray-600 mt-4">Please try again later.</p>';
+                pageTitle.textContent = 'Error - Siam\'s Insight';
+            }
+        }
+
+        // Call the function to load the blog post when the page loads
+        document.addEventListener('DOMContentLoaded', loadBlogPost);
+    </script>
+</body>
+</html>

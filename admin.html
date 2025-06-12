@@ -40,6 +40,7 @@
         .sidebar {
             width: 18rem; /* w-72 */
             transition: width 0.3s ease-in-out;
+            flex-shrink: 0; /* Prevent sidebar from shrinking */
         }
         .sidebar.collapsed {
             width: 5rem; /* w-20 */
@@ -75,13 +76,18 @@
             transform: rotate(180deg); /* Rotate arrow when collapsed */
         }
 
-
         /* Content sections */
         .admin-content-section {
             display: none; /* Hidden by default */
         }
         .admin-content-section.active {
             display: block; /* Shown when active */
+        }
+
+        /* Ensure main content takes remaining width */
+        .main-content-area {
+            flex-grow: 1; /* Allows it to take up remaining space */
+            overflow-y: auto; /* Enable scrolling for content */
         }
     </style>
 </head>
@@ -96,7 +102,7 @@
     </header>
 
     <!-- Admin Content Area -->
-    <div class="flex flex-1 min-h-[calc(100vh-64px)]"> <!-- Ensure full height for sidebar and content -->
+    <div class="flex flex-1 min-h-[calc(100vh-64px)] w-full"> <!-- Adjusted to be w-full and occupy space below header -->
 
         <!-- Login Form (Initially visible) -->
         <section id="loginSection" class="bg-white p-8 rounded-lg shadow-xl max-w-md mx-auto my-auto absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-full">
@@ -122,7 +128,7 @@
         <!-- Main Admin Dashboard (Hidden until login) -->
         <section id="adminDashboard" class="hidden flex flex-1">
             <!-- Sidebar Navigation -->
-            <aside id="sidebar" class="sidebar bg-indigo-700 p-6 shadow-xl flex-shrink-0 relative"> <!-- Changed to bg-indigo-700 -->
+            <aside id="sidebar" class="sidebar bg-indigo-700 p-6 shadow-xl relative min-h-full"> <!-- min-h-full to ensure it stretches -->
                 <button id="sidebarToggle" class="sidebar-toggle-button">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg>
                 </button>
@@ -154,7 +160,7 @@
             </aside>
 
             <!-- Main Content Area (Scrollable) -->
-            <main class="flex-1 p-6 overflow-y-auto"> <!-- Renamed from div to main for semantic correctness -->
+            <main class="main-content-area p-6">
                 <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Admin Dashboard</h2>
 
                 <!-- Blog Management Section -->
@@ -238,7 +244,7 @@
                             <input type="url" id="docExternalDownloadUrl" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
                             <p class="text-sm text-gray-500 mt-1">Provide a direct public link if using external storage (e.g., Google Drive, Dropbox).</p>
                         </div>
-                        <!-- Removed access type selection as per user request -->
+                        <!-- Access type selection removed as per user request -->
                         <div class="flex space-x-4">
                             <button id="saveDocButton" class="btn-primary">Save Document</button>
                             <button id="cancelEditDocButton" class="btn-secondary hidden">Cancel Edit</button>
@@ -269,7 +275,7 @@
         <!-- Message/Notification Area (for general feedback) -->
         <div id="messageArea" class="fixed bottom-4 right-4 bg-green-500 text-white p-3 rounded-lg shadow-lg hidden z-50"></div>
 
-    </div> <!-- End of flex-1 main container -->
+    </div> <!-- End of flex container for header + main content -->
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shifat Shahriar Siam - Public Health & Beyond</title>
     <!-- GLOBAL GOOGLE ADSENSE CODE - PASTE YOURS HERE -->
+    <!-- This MUST be the first script in the <head> that loads adbygoogle.js -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6894065582382364"
      crossorigin="anonymous"></script>
     <!-- END GLOBAL GOOGLE ADSENSE CODE -->
@@ -513,9 +514,14 @@
             `;
             document.getElementById('adContainer').innerHTML = adUnitHtml;
 
-            // Push the ad to be loaded by AdSense
-            // This is the standard way to programmatically load an ad unit after it's been injected
-            (window.adsbygoogle = window.adsbygoogle || []).push({});
+            // Important: This pushes the ad unit to be loaded by AdSense's global script.
+            // This is how you programmatically load an AdSense ad unit after it's injected into the DOM.
+            if (window.adsbygoogle && window.adsbygoogle.push) {
+                (window.adsbygoogle = window.adsbygoogle || []).push({});
+            } else {
+                console.warn("AdSense script not loaded or not ready. Ad might not display.");
+            }
+
 
             // Simulate ad completion after a delay for demonstration purposes.
             // In a real, secure rewarded ad implementation, you'd rely on AdSense API callbacks

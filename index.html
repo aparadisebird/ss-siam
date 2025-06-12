@@ -428,25 +428,39 @@
             const trxId = document.getElementById('trxId').value;
 
             if (!buyerName || !buyerEmail || !trxId) {
-                // In a real app, use a custom modal for user feedback instead of alert()
-                alert('Please fill in all fields.');
+                alert('Please fill in all fields.'); // Using alert for demo, replace with custom modal
                 return;
             }
 
-            // Simulate user authentication for order submission (anonymous sign-in)
-            // In a real scenario, you might want more robust user login
             let userId = null;
             try {
-                // Sign in anonymously to get a user ID for Firestore security rules
                 const userCredential = await auth.signInAnonymously();
                 userId = userCredential.user.uid;
                 console.log("Signed in anonymously with UID:", userId);
             } catch (error) {
                 console.error("Error signing in anonymously:", error);
-                // In a real app, use a custom modal for user feedback
                 alert("Could not process your request due to an authentication error. Please try again.");
                 return;
             }
+
+            // --- Fetch document details to get URL ---
+            let documentData = null;
+            try {
+                // Find the document in premiumDocuments collection by name
+                const docSnapshot = await db.collection('premiumDocuments').where('name', '==', docTitle).limit(1).get();
+                if (!docSnapshot.empty) {
+                    documentData = docSnapshot.docs[0].data();
+                } else {
+                    alert('Error: Premium document details not found.');
+                    console.error('Premium document not found for title:', docTitle);
+                    return;
+                }
+            } catch (error) {
+                console.error("Error fetching document details for order:", error);
+                alert("Error fetching document details. Please try again.");
+                return;
+            }
+            // --- End Fetch document details ---
 
             // Add the order to Firestore
             try {
@@ -457,9 +471,10 @@
                     bkashTrxId: trxId,
                     orderDate: new Date().toISOString(), // Store current date/time
                     status: 'pending', // Initial status
-                    userId: userId // Store the anonymous user's UID
+                    userId: userId, // Store the anonymous user's UID
+                    documentFirestoreId: docSnapshot.docs[0].id, // Store the document's Firestore ID
+                    documentUrl: documentData.externalDownloadUrl || '' // Store the external download URL
                 });
-                // In a real app, use a custom modal for user feedback
                 alert('Your order has been submitted! You will receive an email upon verification. Thank you!');
                 closeModal('bkashModal');
                 // Clear the form fields after submission
@@ -468,7 +483,6 @@
                 document.getElementById('trxId').value = '';
             } catch (error) {
                 console.error("Error adding document to Firestore:", error);
-                // In a real app, use a custom modal for user feedback
                 alert("There was an error submitting your order. Please try again.");
             }
         }
@@ -487,11 +501,28 @@
         }
 
         // Simulate document access after ad (no actual document loading)
-        function accessDocumentAfterAd() {
+        async function accessDocumentAfterAd() {
             const docTitle = document.getElementById('adDocTitle').textContent;
-            // In a real application, you would fetch the document's direct link from Firestore
-            // and redirect the user or load it here.
-            alert(`Document "${docTitle}" is now accessible! (This is a simulation, in real app, doc would load/download)`); // Using alert for demo, replace with custom modal
+            // Fetch document details to get URL for ad access
+            let documentData = null;
+            try {
+                const docSnapshot = await db.collection('premiumDocuments').where('name', '==', docTitle).limit(1).get();
+                if (!docSnapshot.empty) {
+                    documentData = docSnapshot.docs[0].data();
+                    const downloadUrl = documentData.externalDownloadUrl;
+                    if (downloadUrl) {
+                        alert(`Document "${docTitle}" is now accessible! Opening download link.`);
+                        window.open(downloadUrl, '_blank'); // Open in new tab
+                    } else {
+                        alert(`Document "${docTitle}" is accessible, but no download link found. Please contact support.`);
+                    }
+                } else {
+                    alert('Error: Premium document details not found for ad access.');
+                }
+            } catch (error) {
+                console.error("Error fetching document for ad access:", error);
+                alert("Error accessing document after ad. Please try again.");
+            }
             closeModal('adModal');
         }
 

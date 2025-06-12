@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shifat Shahriar Siam - Public Health & Beyond</title>
-    <!-- Load Tailwind CSS from CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load Inter font from Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* Apply Inter font globally and set a base text color */
@@ -73,15 +71,12 @@
 </head>
 <body>
 
-    <!-- Header Section -->
     <header class="bg-white shadow-md p-4 sticky top-0 z-50 rounded-b-lg">
         <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
-            <!-- Logo/Site Title -->
             <a href="#" class="text-3xl font-bold text-indigo-700 hover:text-indigo-900 transition duration-300">
                 Siam's Insight
             </a>
 
-            <!-- Navigation Menu -->
             <nav class="mt-4 md:mt-0">
                 <ul class="flex flex-wrap justify-center space-x-4 md:space-x-8">
                     <li><a href="#home" class="text-gray-700 hover:text-indigo-600 font-medium transition duration-300 p-2 rounded-md">Home</a></li>
@@ -94,10 +89,8 @@
         </div>
     </header>
 
-    <!-- Hero Section - Enhanced for Professional Appeal -->
     <section id="home" class="bg-gradient-to-r from-indigo-700 via-indigo-600 to-purple-800 text-white py-24 px-4 text-center rounded-lg m-4 shadow-2xl relative overflow-hidden hero-background-pattern">
-        <div class="container mx-auto relative z-10"> <!-- Added relative z-10 for content to be above pattern -->
-            <h1 class="text-6xl md:text-7xl font-extrabold leading-tight mb-5 animate-fade-in-down">
+        <div class="container mx-auto relative z-10"> <h1 class="text-6xl md:text-7xl font-extrabold leading-tight mb-5 animate-fade-in-down">
                 Shifat Shahriar Siam
             </h1>
             <p class="text-2xl md:text-3xl font-light mb-10 max-w-4xl mx-auto opacity-90 animate-fade-in-up">
@@ -112,17 +105,13 @@
         </div>
     </section>
 
-    <!-- Blog Section -->
     <section id="blog" class="py-16 px-4 bg-white m-4 rounded-lg shadow-xl">
         <div class="container mx-auto">
             <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Latest Blog Posts</h2>
             <div id="blogPostsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Blog posts will be loaded here dynamically by JavaScript -->
                 <p class="text-gray-600 text-center col-span-full">Loading blog posts...</p>
             </div>
             <div class="text-center mt-12">
-                <!-- This button could link to a dedicated "All Blogs" page if you had one,
-                     for now, it refreshes or scrolls to the blog section. -->
                 <a href="#blog" class="inline-block bg-indigo-600 text-white hover:bg-indigo-700 px-8 py-4 rounded-full text-lg font-semibold shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
                     View All Posts
                 </a>
@@ -130,7 +119,6 @@
         </div>
     </section>
 
-    <!-- Premium Notes Section -->
     <section id="premium-notes" class="py-16 px-4 bg-gray-50 m-4 rounded-lg shadow-xl">
         <div class="container mx-auto">
             <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Premium Documents & Notes</h2>
@@ -139,13 +127,11 @@
             </p>
 
             <div id="premiumDocumentsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Premium Documents will be loaded here dynamically by JavaScript -->
                 <p class="text-gray-600 text-center col-span-full">Loading premium documents...</p>
             </div>
         </div>
     </section>
 
-    <!-- About Section -->
     <section id="about" class="py-16 px-4 bg-white m-4 rounded-lg shadow-xl">
         <div class="container mx-auto flex flex-col md:flex-row items-center justify-center gap-12">
             <div class="w-full md:w-1/3 flex justify-center">
@@ -171,7 +157,6 @@
                     </a>
                 </div>
             </div>
-            <!-- Simple contact form placeholder -->
             <form class="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-md">
                 <div class="mb-4">
                     <label for="name" class="block text-gray-700 text-sm font-bold mb-2 text-left">Your Name</label>
@@ -192,7 +177,6 @@
         </div>
     </section>
 
-    <!-- Footer Section -->
     <footer class="bg-gray-800 text-white py-8 px-4 text-center rounded-t-lg mt-4">
         <div class="container mx-auto">
             <p class="mb-4">&copy; 2025 Shifat Shahriar Siam. All rights reserved.</p>
@@ -203,7 +187,6 @@
             <p class="text-sm text-gray-500">Built with passion for Public Health and Education.</p>
         </div>
     </footer>
-    <!-- Modals for Bkash Payment and Ad Watching (Placeholders) -->
     <div id="bkashModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
             <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Purchase <span id="bkashDocTitle" class="text-indigo-600"></span> via Bkash</h3>
@@ -240,7 +223,6 @@
         <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
             <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Watch Ad to Access <span id="adDocTitle" class="text-indigo-600"></span></h3>
             <div id="adContainer" class="bg-gray-200 h-48 flex items-center justify-center text-gray-600 text-center rounded-md mb-6">
-                <!-- Google AdSense ad will load here -->
                 <p>Advertisement will load here...</p>
                 <p class="mt-2 text-sm">(Simulated Ad)</p>
             </div>
@@ -258,7 +240,6 @@
         </div>
     </div>
 
-    <!-- JavaScript for Modal Functionality and Firebase Integration -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -306,18 +287,15 @@
                         <article class="bg-gray-50 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
                             <img src="${post.imageUrl || 'https://placehold.co/600x400/9ca3af/ffffff?text=Blog+Image'}" alt="${post.title}" class="w-full h-48 object-cover rounded-t-lg" onerror="this.onerror=null;this.src='https://placehold.co/600x400/9ca3af/ffffff?text=Image+Missing';">
                             <div class="p-6">
-                                <!-- Link the title to the detail page -->
                                 <a href="blog-post-detail.html?slug=${post.slug}" class="block">
                                     <h3 class="text-2xl font-semibold text-gray-900 mb-3 hover:text-indigo-700 transition duration-300">${post.title}</h3>
                                 </a>
-                                <!-- line-clamp-3 class truncates text after 3 lines, requiring "Read More" -->
                                 <p class="text-gray-700 mb-4 line-clamp-3">${post.content}</p>
                                 <div class="flex justify-between items-center text-sm text-gray-500 mb-4">
                                     <span>By ${post.author}</span>
                                     <span>${postDate}</span>
                                     <span>${post.readTime}</span>
                                 </div>
-                                <!-- Explicit "Read More" link -->
                                 <a href="blog-post-detail.html?slug=${post.slug}" class="text-indigo-600 hover:text-indigo-800 font-semibold flex items-center">
                                     Read More
                                     <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
@@ -439,25 +417,27 @@
                 console.log("Signed in anonymously with UID:", userId);
             } catch (error) {
                 console.error("Error signing in anonymously:", error);
-                alert("Could not process your request due to an authentication error. Please try again.");
+                alert("Authentication error during order. Please try again. (Check console for details)"); // More specific error
                 return;
             }
 
             // --- Fetch document details to get URL ---
             let documentData = null;
+            let documentFirestoreId = null;
             try {
                 // Find the document in premiumDocuments collection by name
                 const docSnapshot = await db.collection('premiumDocuments').where('name', '==', docTitle).limit(1).get();
                 if (!docSnapshot.empty) {
                     documentData = docSnapshot.docs[0].data();
+                    documentFirestoreId = docSnapshot.docs[0].id;
                 } else {
-                    alert('Error: Premium document details not found.');
+                    alert('Error: Document details not found for purchase. Please contact support.'); // More specific error
                     console.error('Premium document not found for title:', docTitle);
                     return;
                 }
             } catch (error) {
                 console.error("Error fetching document details for order:", error);
-                alert("Error fetching document details. Please try again.");
+                alert("Error fetching document details for purchase. Please try again. (Check console for details)"); // More specific error
                 return;
             }
             // --- End Fetch document details ---
@@ -472,18 +452,18 @@
                     orderDate: new Date().toISOString(), // Store current date/time
                     status: 'pending', // Initial status
                     userId: userId, // Store the anonymous user's UID
-                    documentFirestoreId: docSnapshot.docs[0].id, // Store the document's Firestore ID
+                    documentFirestoreId: documentFirestoreId, // Store the document's Firestore ID
                     documentUrl: documentData.externalDownloadUrl || '' // Store the external download URL
                 });
-                alert('Your order has been submitted! You will receive an email upon verification. Thank you!');
+                alert('Your order has been submitted successfully! You will receive an email upon verification. Thank you!');
                 closeModal('bkashModal');
                 // Clear the form fields after submission
                 document.getElementById('buyerNameBkash').value = '';
                 document.getElementById('buyerEmailBkash').value = '';
                 document.getElementById('trxId').value = '';
             } catch (error) {
-                console.error("Error adding document to Firestore:", error);
-                alert("There was an error submitting your order. Please try again.");
+                console.error("Error adding order document to Firestore:", error); // More specific console log
+                alert("There was an error submitting your order. Please try again. (Check console for details)"); // More specific error
             }
         }
 
@@ -517,11 +497,11 @@
                         alert(`Document "${docTitle}" is accessible, but no download link found. Please contact support.`);
                     }
                 } else {
-                    alert('Error: Premium document details not found for ad access.');
+                    alert('Error: Premium document details not found for ad access. Please contact support.');
                 }
             } catch (error) {
                 console.error("Error fetching document for ad access:", error);
-                alert("Error accessing document after ad. Please try again.");
+                alert("Error accessing document after ad. Please try again. (Check console for details)");
             }
             closeModal('adModal');
         }

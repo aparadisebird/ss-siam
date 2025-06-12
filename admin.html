@@ -352,7 +352,7 @@
         const docPagesInput = document.getElementById('docPages');
         const docPreviewImageUrlInput = document.getElementById('docPreviewImageUrl');
         const docExternalDownloadUrlInput = document.getElementById('docExternalDownloadUrl');
-        // New checkbox elements
+        // Checkbox elements
         const allowBkashCheckbox = document.getElementById('allowBkash');
         const allowAdCheckbox = document.getElementById('allowAd');
 
@@ -754,8 +754,9 @@
         }
 
         // --- Purchase Request Management (Bkash) ---
-        // Load Purchase Requests (Real-time listener, ordered by status and then date)
+        // Load Purchase Requests (Real-time listener)
         function loadPurchaseRequests() {
+            // Added more specific error logging for debugging
             db.collection('bkashOrders').orderBy('status').orderBy('orderDate', 'desc').onSnapshot(snapshot => {
                 purchaseRequestsList.innerHTML = ''; // Clear current list
                 if (snapshot.empty) {
@@ -801,8 +802,9 @@
                     purchaseRequestsList.innerHTML += orderElement;
                 });
             }, error => {
-                console.error("Error loading purchase requests:", error);
-                showMessage('Error loading purchase requests.', 'error');
+                // IMPORTANT: Log the actual error code and message here!
+                console.error("Error loading purchase requests. Error code:", error.code, "Message:", error.message, error);
+                showMessage(`Error loading purchase requests: ${error.message}`, 'error');
             });
         }
 

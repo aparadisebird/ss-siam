@@ -37,13 +37,13 @@
 
         /* Sidebar Navigation Styles */
         .sidebar-nav-item {
-            @apply flex items-center p-3 my-2 rounded-lg text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition duration-200 cursor-pointer;
+            @apply flex items-center p-4 my-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition duration-200 cursor-pointer text-lg font-medium;
         }
         .sidebar-nav-item.active {
-            @apply bg-indigo-500 text-white shadow-md;
+            @apply bg-indigo-600 text-white shadow-lg;
         }
         .sidebar-nav-item.active:hover {
-            @apply bg-indigo-600;
+            @apply bg-indigo-700;
         }
 
         /* Content sections */
@@ -92,24 +92,27 @@
         <!-- Main Admin Dashboard (Hidden until login) -->
         <section id="adminDashboard" class="hidden flex flex-1">
             <!-- Sidebar Navigation -->
-            <aside class="w-64 bg-white p-6 shadow-md border-r border-gray-200">
+            <aside class="w-72 bg-gray-800 p-6 shadow-xl flex-shrink-0"> <!-- Increased width to 72, dark background -->
                 <nav>
-                    <ul class="space-y-2">
+                    <ul class="space-y-4">
                         <li>
                             <button type="button" data-section-target="blog-management" class="sidebar-nav-item active">
-                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                <!-- Blog Icon -->
+                                <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7-7 7m-9-7H4a2 2 0 01-2-2V8a2 2 0 012-2h1m5 16H6a2 2 0 01-2-2v-5a2 2 0 012-2h3m-5-3h.01M19 12a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                                 Blog Management
                             </button>
                         </li>
                         <li>
                             <button type="button" data-section-target="document-management" class="sidebar-nav-item">
-                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                <!-- Document Icon -->
+                                <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                                 Document Management
                             </button>
                         </li>
                         <li>
                             <button type="button" data-section-target="purchase-requests" class="sidebar-nav-item">
-                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h10m-9 4h8a2 2 0 002-2V6a2 2 0 00-2-2H7a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                <!-- Purchases Icon -->
+                                <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zM2 12s2-4 10-4 10 4 10 4-2 4-10 4-10-4-10-4z"></path></svg>
                                 Purchase Requests
                             </button>
                         </li>
@@ -202,13 +205,7 @@
                             <input type="url" id="docExternalDownloadUrl" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
                             <p class="text-sm text-gray-500 mt-1">Provide a direct public link if using external storage (e.g., Google Drive, Dropbox).</p>
                         </div>
-                        <div class="mb-6">
-                            <label for="docAccessType" class="block text-gray-700 text-sm font-bold mb-2">Access Type</label>
-                            <select id="docAccessType" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
-                                <option value="bkash_payment">Bkash Payment</option>
-                                <option value="ad_watch">Ad Watch</option>
-                            </select>
-                        </div>
+                        <!-- Removed access type selection as per user request -->
                         <div class="flex space-x-4">
                             <button id="saveDocButton" class="btn-primary">Save Document</button>
                             <button id="cancelEditDocButton" class="btn-secondary hidden">Cancel Edit</button>
@@ -272,7 +269,7 @@
         const adminDashboard = document.getElementById('adminDashboard');
         const loginEmailInput = document.getElementById('loginEmail');
         const loginPasswordInput = document.getElementById('loginPassword');
-        const loginButton = document.getElementById('loginButton');
+        const loginButton = document.getElementById('loginButton'); // Re-using this ID
         const loginMessage = document.getElementById('loginMessage');
         const logoutButton = document.getElementById('logoutButton');
         const messageArea = document.getElementById('messageArea');
@@ -304,7 +301,6 @@
         const docPagesInput = document.getElementById('docPages');
         const docPreviewImageUrlInput = document.getElementById('docPreviewImageUrl');
         const docExternalDownloadUrlInput = document.getElementById('docExternalDownloadUrl');
-        const docAccessTypeInput = document.getElementById('docAccessType');
         const saveDocButton = document.getElementById('saveDocButton');
         const cancelEditDocButton = document.getElementById('cancelEditDocButton');
         const premiumDocumentsList = document.getElementById('premiumDocumentsList');
@@ -353,7 +349,7 @@
             docPagesInput.value = '';
             docPreviewImageUrlInput.value = '';
             docExternalDownloadUrlInput.value = '';
-            docAccessTypeInput.value = 'bkash_payment'; // Default value
+            // docAccessTypeInput.value = 'bkash_payment'; // No longer managing this from here
             saveDocButton.textContent = 'Save Document';
             cancelEditDocButton.classList.add('hidden');
         }
@@ -364,9 +360,11 @@
                 const targetId = button.dataset.sectionTarget;
                 const targetContent = document.getElementById(targetId);
 
+                // Hide all content sections and deactivate all nav items
                 adminContentSections.forEach(content => content.classList.remove('active'));
                 sidebarNavItems.forEach(btn => btn.classList.remove('active'));
 
+                // Show the target content section and activate the clicked nav item
                 targetContent.classList.add('active');
                 button.classList.add('active');
             });
@@ -383,7 +381,7 @@
                 loadBlogPosts(); // Load initial data
                 loadPremiumDocuments();
                 loadPurchaseRequests();
-                // Ensure initial section is active on login
+                // Ensure initial section (Blog Management) is active on login
                 document.getElementById('blog-management').classList.add('active');
                 document.querySelector('[data-section-target="blog-management"]').classList.add('active');
 
@@ -396,7 +394,7 @@
         });
 
         // Login Button Click
-        loginButton.addEventListener('click', async () => {
+        document.getElementById('loginButton').addEventListener('click', async () => { // Changed to getElementById from querySelectorAll
             const email = loginEmailInput.value;
             const password = loginPasswordInput.value;
 
@@ -582,7 +580,7 @@
                         <div class="bg-white p-4 rounded-lg shadow-md flex justify-between items-center">
                             <div>
                                 <h5 class="text-xl font-semibold text-gray-800">${document.name}</h5>
-                                <p class="text-gray-600 text-sm">Price: BDT ${document.priceBDT} | Pages: ${document.pages} | Access: ${document.accessType.replace('_', ' ')}</p>
+                                <p class="text-gray-600 text-sm">Price: BDT ${document.priceBDT} | Pages: ${document.pages}</p>
                                 <p class="text-gray-500 text-xs mt-1">Link: <span class="font-mono truncate w-80 inline-block">${document.externalDownloadUrl || 'N/A'}</span></p>
                             </div>
                             <div class="flex space-x-2">
@@ -608,10 +606,8 @@
             const pages = parseInt(docPagesInput.value);
             const previewImageUrl = docPreviewImageUrlInput.value.trim();
             const externalDownloadUrl = docExternalDownloadUrlInput.value.trim();
-            const accessType = docAccessTypeInput.value;
 
-
-            if (!name || !description || isNaN(priceBDT) || isNaN(pages) || !previewImageUrl || !accessType) {
+            if (!name || !description || isNaN(priceBDT) || isNaN(pages) || !previewImageUrl) {
                 showMessage('Please fill in all required document fields and ensure price/pages are numbers.', 'error');
                 return;
             }
@@ -623,7 +619,7 @@
                 pages,
                 previewImageUrl,
                 externalDownloadUrl: externalDownloadUrl || '', // Store empty string if no URL provided
-                accessType
+                accessType: 'bkash_payment' // Defaulting to bkash_payment, as it's not managed here, but needed for homepage logic
             };
 
             try {
@@ -657,7 +653,6 @@
                     docPagesInput.value = document.pages;
                     docPreviewImageUrlInput.value = document.previewImageUrl;
                     docExternalDownloadUrlInput.value = document.externalDownloadUrl || '';
-                    docAccessTypeInput.value = document.accessType || 'bkash_payment'; // Set default if not found
                     saveDocButton.textContent = 'Update Document';
                     cancelEditDocButton.classList.remove('hidden');
                     // Scroll to top of form

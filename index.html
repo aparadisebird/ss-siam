@@ -116,66 +116,9 @@
     <section id="blog" class="py-16 px-4 bg-white m-4 rounded-lg shadow-xl">
         <div class="container mx-auto">
             <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Latest Blog Posts</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Blog Post Card 1 -->
-                <article class="bg-gray-50 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-                    <img src="https://placehold.co/600x400/9ca3af/ffffff?text=Public+Health+Research" alt="Public Health Research" class="w-full h-48 object-cover rounded-t-lg">
-                    <div class="p-6">
-                        <h3 class="text-2xl font-semibold text-gray-900 mb-3">The Future of Public Health Research in Bangladesh</h3>
-                        <p class="text-gray-700 mb-4 line-clamp-3">
-                            Dive into the evolving landscape of public health research, exploring new methodologies and their impact on community well-being. This post discusses challenges and opportunities specific to Bangladesh...
-                        </p>
-                        <div class="flex justify-between items-center text-sm text-gray-500 mb-4">
-                            <span>By Shifat Siam</span>
-                            <span>June 10, 2025</span>
-                            <span>5 min read</span>
-                        </div>
-                        <a href="#" class="text-indigo-600 hover:text-indigo-800 font-semibold flex items-center">
-                            Read More
-                            <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                        </a>
-                    </div>
-                </article>
-
-                <!-- Blog Post Card 2 -->
-                <article class="bg-gray-50 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-                    <img src="https://placehold.co/600x400/a78bfa/ffffff?text=Higher+Education+Tips" alt="Higher Education Tips" class="w-full h-48 object-cover rounded-t-lg">
-                    <div class="p-6">
-                        <h3 class="text-2xl font-semibold text-gray-900 mb-3">Navigating Higher Education: Tips for University Students</h3>
-                        <p class="text-gray-700 mb-4 line-clamp-3">
-                            As an undergraduate, I share my personal tips and strategies for excelling in university life, from time management to academic success and extracurriculars...
-                        </p>
-                        <div class="flex justify-between items-center text-sm text-gray-500 mb-4">
-                            <span>By Shifat Siam</span>
-                            <span>June 05, 2025</span>
-                            <span>7 min read</span>
-                        </div>
-                        <a href="#" class="text-indigo-600 hover:text-indigo-800 font-semibold flex items-center">
-                            Read More
-                            <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                        </a>
-                    </div>
-                </article>
-
-                <!-- Blog Post Card 3 -->
-                <article class="bg-gray-50 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-                    <img src="https://placehold.co/600x400/818cf8/ffffff?text=Tech+for+Health" alt="Technology in Health" class="w-full h-48 object-cover rounded-t-lg">
-                    <div class="p-6">
-                        <h3 class="text-2xl font-semibold text-gray-900 mb-3">Leveraging Tech for Public Health Initiatives</h3>
-                        <p class="text-gray-700 mb-4 line-clamp-3">
-                            Exploring how cutting-edge technologies like AI, data analytics, and mobile apps are transforming public health interventions globally and locally...
-                        </p>
-                        <div class="flex justify-between items-center text-sm text-gray-500 mb-4">
-                            <span>By Shifat Siam</span>
-                            <span>May 28, 2025</span>
-                            <span>6 min read</span>
-                        </div>
-                        <a href="#" class="text-indigo-600 hover:text-indigo-800 font-semibold flex items-center">
-                            Read More
-                            <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                        </a>
-                    </div>
-                </article>
+            <div id="blogPostsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Blog posts will be loaded here dynamically by JavaScript -->
+                <p class="text-gray-600 text-center col-span-full">Loading blog posts...</p>
             </div>
             <div class="text-center mt-12">
                 <a href="#" class="inline-block bg-indigo-600 text-white hover:bg-indigo-700 px-8 py-4 rounded-full text-lg font-semibold shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
@@ -193,77 +136,9 @@
                 Access exclusive class notes, research guides, and in-depth analyses on public health, education, and various academic topics.
             </p>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Premium Document Card 1 -->
-                <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-                    <img src="https://placehold.co/600x400/d1d5db/4b5563?text=Epidemiology+Notes" alt="Epidemiology Notes" class="w-full h-48 object-cover rounded-t-lg">
-                    <div class="p-6">
-                        <h3 class="text-2xl font-semibold text-gray-900 mb-3">Advanced Epidemiology Study Guide (PDF)</h3>
-                        <p class="text-gray-700 mb-4 line-clamp-3">
-                            Comprehensive notes covering advanced epidemiological concepts, study designs, and statistical methods. Essential for public health students.
-                        </p>
-                        <div class="flex items-center justify-between mb-6">
-                            <span class="text-3xl font-bold text-green-700">BDT 150</span>
-                            <span class="text-sm text-gray-500 italic">25 pages</span>
-                        </div>
-                        <div class="flex flex-col space-y-3">
-                            <!-- Option 1: Bkash Payment Placeholder -->
-                            <button onclick="showBkashPaymentModal('Advanced Epidemiology')" class="w-full bg-indigo-600 text-white hover:bg-indigo-700 px-6 py-3 rounded-lg font-semibold shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
-                                Buy via Bkash
-                            </button>
-                            <!-- Option 2: Watch Ad Placeholder -->
-                            <button onclick="showAdModal('Advanced Epidemiology')" class="w-full bg-yellow-500 text-gray-900 hover:bg-yellow-600 px-6 py-3 rounded-lg font-semibold shadow-md transform hover:scale-105 transition duration-300 ease-in-out">
-                                Watch Ad to Access (Free)
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Premium Document Card 2 -->
-                <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-                    <img src="https://placehold.co/600x400/e0e7ff/4338ca?text=Health+Policy+Analysis" alt="Health Policy Analysis" class="w-full h-48 object-cover rounded-t-lg">
-                    <div class="p-6">
-                        <h3 class="text-2xl font-semibold text-gray-900 mb-3">Health Policy Analysis Framework (DOC)</h3>
-                        <p class="text-gray-700 mb-4 line-clamp-3">
-                            A detailed guide on analyzing public health policies, including frameworks, case studies, and critical evaluation methods.
-                        </p>
-                        <div class="flex items-center justify-between mb-6">
-                            <span class="text-3xl font-bold text-green-700">BDT 120</span>
-                            <span class="text-sm text-gray-500 italic">18 pages</span>
-                        </div>
-                        <div class="flex flex-col space-y-3">
-                            <button onclick="showBkashPaymentModal('Health Policy Analysis')" class="w-full bg-indigo-600 text-white hover:bg-indigo-700 px-6 py-3 rounded-lg font-semibold shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
-                                Buy via Bkash
-                            </button>
-                            <button onclick="showAdModal('Health Policy Analysis')" class="w-full bg-yellow-500 text-gray-900 hover:bg-yellow-600 px-6 py-3 rounded-lg font-semibold shadow-md transform hover:scale-105 transition duration-300 ease-in-out">
-                                Watch Ad to Access (Free)
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Premium Document Card 3 -->
-                <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-                    <img src="https://placehold.co/600x400/bfdbfe/1d4ed8?text=Research+Methods" alt="Research Methods Notes" class="w-full h-48 object-cover rounded-t-lg">
-                    <div class="p-6">
-                        <h3 class="text-2xl font-semibold text-gray-900 mb-3">Qualitative Research Methods in PH (PDF)</h3>
-                        <p class="text-gray-700 mb-4 line-clamp-3">
-                            An in-depth look into qualitative research methodologies specific to public health, covering interviews, focus groups, and data analysis.
-                        </p>
-                        <div class="flex items-center justify-between mb-6">
-                            <span class="text-3xl font-bold text-green-700">BDT 100</span>
-                            <span class="text-sm text-gray-500 italic">20 pages</span>
-                        </div>
-                        <div class="flex flex-col space-y-3">
-                            <button onclick="showBkashPaymentModal('Qualitative Research Methods')" class="w-full bg-indigo-600 text-white hover:bg-indigo-700 px-6 py-3 rounded-lg font-semibold shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
-                                Buy via Bkash
-                            </button>
-                            <button onclick="showAdModal('Qualitative Research Methods')" class="w-full bg-yellow-500 text-gray-900 hover:bg-yellow-600 px-6 py-3 rounded-lg font-semibold shadow-md transform hover:scale-105 transition duration-300 ease-in-out">
-                                Watch Ad to Access (Free)
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            <div id="premiumDocumentsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Premium Documents will be loaded here dynamically by JavaScript -->
+                <p class="text-gray-600 text-center col-span-full">Loading premium documents...</p>
             </div>
         </div>
     </section>
@@ -291,38 +166,6 @@
                     </a>
                     <a href="#" class="text-gray-600 hover:text-indigo-600 transition duration-300">
                         <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2.417a.75.75 0 01.07.867 8.686 8.686 0 00-1.747 1.839 8.686 8.686 0 00-1.839 1.747.75.75 0 01-.867-.07C2.417 12.315 2 12.007 2 12s.417-10.315 10.315-10.315zM22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V12h2.54v9.878C18.343 21.128 22 16.991 22 12zM12.315 2.417c0-5.523-4.477-10-10-10S-2 6.477-2 12c0 4.991 3.657 9.128 8.438 9.878V12h2.54v9.878C18.343 21.128 22 16.991 22 12zM12.315 2.417a.75.75 0 01.07.867 8.686 8.686 0 00-1.747 1.839 8.686 8.686 0 00-1.839 1.747.75.75 0 01-.867-.07C2.417 12.315 2 12.007 2 12s.417-10.315 10.315-10.315zM22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V12h2.54v9.878C18.343 21.128 22 16.991 22 12zM12.315 2.417a.75.75 0 01.07.867 8.686 8.686 0 00-1.747 1.839 8.686 8.686 0 00-1.839 1.747.75.75 0 01-.867-.07C2.417 12.315 2 12.007 2 12s.417-10.315 10.315-10.315zM22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V12h2.54v9.878C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
-                        <path d="M12.315 2.417a.75.75 0 01.07.867 8.686 8.686 0 00-1.747 1.839 8.686 8.686 0 00-1.839 1.747.75.75 0 01-.867-.07C2.417 12.315 2 12.007 2 12s.417-10.315 10.315-10.315zM22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V12h2.54v9.878C18.343 21.128 22 16.991 22 12z" /></svg>
-                    </a>
-                    <a href="#" class="text-gray-600 hover:text-indigo-600 transition duration-300">
-                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.026 15.656C3.992 14.197 3.398 12.56 3.398 10.913c0-2.388 1.487-4.471 3.523-5.323L7.75 5.568V1.698l-2.724 1.706C2.923 4.887 1 7.747 1 10.913c0 3.73 2.418 6.9 5.86 8.163L6.963 17.51a8.55 8.55 0 01-1.937-1.854zM23 10.913c0-3.73-2.418-6.9-5.86-8.163L17.037 6.49a8.55 8.55 0 011.937 1.854C20.008 9.803 20.602 11.44 20.602 13.087c0 2.388-1.487 4.471-3.523 5.323l-1.827.876V22.302l2.724-1.706C21.077 19.113 23 16.253 23 13.087zM12 7.026v10.596L6.5 14.498V9.502L12 7.026zm0-2.428L5.5 8.924V15.076L12 17.552v-2.428l6.5-2.924V8.924L12 6.598zm0 15.011l-6.5-2.924V8.924L12 6.598V3.671L18.5 6.598V15.076L12 17.552z" /></svg>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="py-16 px-4 bg-gray-100 m-4 rounded-lg shadow-xl">
-        <div class="container mx-auto text-center">
-            <h2 class="text-4xl font-bold text-gray-800 mb-8">Get in Touch</h2>
-            <p class="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
-                Have questions, suggestions, or just want to say hello? Feel free to reach out to me!
-            </p>
-            <div class="flex flex-col md:flex-row justify-center items-center gap-8 mb-12">
-                <div class="p-6 bg-white rounded-lg shadow-md w-full md:w-auto flex flex-col items-center">
-                    <svg class="w-12 h-12 text-indigo-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                    <p class="text-xl font-semibold text-gray-800 mb-2">Email Me</p>
-                    <a href="mailto:your.email@example.com" class="text-indigo-600 hover:underline">your.email@example.com</a>
-                </div>
-                <div class="p-6 bg-white rounded-lg shadow-md w-full md:w-auto flex flex-col items-center">
-                    <svg class="w-12 h-12 text-indigo-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586L6 14m.002 0l1.293 1.293a1 1 0 00.707.293h3.996l3.996 3.996V18h2.002a2 2 0 002-2V10a2 2 0 00-2-2h-2V4l-4 4-4-4V4H5a2 2 0 00-2 2v6a2 2 0 002 2h2"></path></svg>
-                    <p class="text-xl font-semibold text-gray-800 mb-2">Connect on Social</p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-600 hover:text-indigo-600 transition duration-300">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V22C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
-                        </a>
-                        <a href="#" class="text-gray-600 hover:text-indigo-600 transition duration-300">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2.417a.75.75 0 01.07.867 8.686 8.686 0 00-1.747 1.839 8.686 8.686 0 00-1.839 1.747.75.75 0 01-.867-.07C2.417 12.315 2 12.007 2 12s.417-10.315 10.315-10.315zM22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V12h2.54v9.878C18.343 21.128 22 16.991 22 12zM12.315 2.417c0-5.523-4.477-10-10-10S-2 6.477-2 12c0 4.991 3.657 9.128 8.438 9.878V12h2.54v9.878C18.343 21.128 22 16.991 22 12zM12.315 2.417a.75.75 0 01.07.867 8.686 8.686 0 00-1.747 1.839 8.686 8.686 0 00-1.839 1.747.75.75 0 01-.867-.07C2.417 12.315 2 12.007 2 12s.417-10.315 10.315-10.315zM22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V12h2.54v9.878C18.343 21.128 22 16.991 22 12zM12.315 2.417a.75.75 0 01.07.867 8.686 8.686 0 00-1.747 1.839 8.686 8.686 0 00-1.839 1.747.75.75 0 01-.867-.07C2.417 12.315 2 12.007 2 12s.417-10.315 10.315-10.315zM22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V12h2.54v9.878C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
                         </a>
                     </div>
                 </div>
@@ -367,7 +210,7 @@
             <p class="text-gray-700 mb-4">
                 Please send the exact amount to my Bkash Personal Number: <strong class="text-green-700">01XXXXXXXXX</strong>.
             </p>
-            <p class="text-gray-700 mb-6">
+            <p class="text-700 mb-6">
                 After sending money, please submit the Transaction ID (TrxID) below. I will verify it manually and send the document link to your email.
             </p>
             <div class="mb-4">
@@ -436,7 +279,109 @@
         const app = firebase.initializeApp(firebaseConfig);
         const db = app.firestore();
         const auth = app.auth();
-        const storage = app.storage(); // Initialize Storage even if using external links, as you might use it later
+        const storage = app.storage();
+
+        // --- Functions for Frontend Dynamic Content ---
+        const blogPostsGrid = document.getElementById('blogPostsGrid');
+        const premiumDocumentsGrid = document.getElementById('premiumDocumentsGrid');
+
+
+        // Load Blog Posts from Firestore
+        async function loadBlogPosts() {
+            blogPostsGrid.innerHTML = '<p class="text-gray-600 text-center col-span-full">Loading blog posts...</p>'; // Show loading message
+            try {
+                // Fetch posts, ordered by date descending
+                const snapshot = await db.collection('blogPosts').orderBy('date', 'desc').get();
+                blogPostsGrid.innerHTML = ''; // Clear loading message
+
+                if (snapshot.empty) {
+                    blogPostsGrid.innerHTML = '<p class="text-gray-600 text-center col-span-full">No blog posts published yet.</p>';
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const post = doc.data();
+                    const postDate = new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); // Format date
+                    const postElement = `
+                        <article class="bg-gray-50 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+                            <img src="${post.imageUrl || 'https://placehold.co/600x400/9ca3af/ffffff?text=Blog+Image'}" alt="${post.title}" class="w-full h-48 object-cover rounded-t-lg" onerror="this.onerror=null;this.src='https://placehold.co/600x400/9ca3af/ffffff?text=Image+Missing';">
+                            <div class="p-6">
+                                <h3 class="text-2xl font-semibold text-gray-900 mb-3">${post.title}</h3>
+                                <p class="text-gray-700 mb-4 line-clamp-3">${post.content}</p>
+                                <div class="flex justify-between items-center text-sm text-gray-500 mb-4">
+                                    <span>By ${post.author}</span>
+                                    <span>${postDate}</span>
+                                    <span>${post.readTime}</span>
+                                </div>
+                                <a href="blog-post.html?slug=${post.slug}" class="text-indigo-600 hover:text-indigo-800 font-semibold flex items-center">
+                                    Read More
+                                    <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                                </a>
+                            </div>
+                        </article>
+                    `;
+                    blogPostsGrid.innerHTML += postElement;
+                });
+            } catch (error) {
+                console.error("Error loading blog posts:", error);
+                blogPostsGrid.innerHTML = '<p class="text-red-500 text-center col-span-full">Error loading blog posts. Please try again later.</p>';
+            }
+        }
+
+        // Load Premium Documents from Firestore
+        async function loadPremiumDocuments() {
+            premiumDocumentsGrid.innerHTML = '<p class="text-gray-600 text-center col-span-full">Loading premium documents...</p>'; // Show loading message
+            try {
+                const snapshot = await db.collection('premiumDocuments').get();
+                premiumDocumentsGrid.innerHTML = ''; // Clear loading message
+
+                if (snapshot.empty) {
+                    premiumDocumentsGrid.innerHTML = '<p class="text-gray-600 text-center col-span-full">No premium documents available yet.</p>';
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const document = doc.data();
+                    const docId = doc.id;
+                    const docElement = `
+                        <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+                            <img src="${document.previewImageUrl || 'https://placehold.co/600x400/d1d5db/4b5563?text=Document+Preview'}" alt="${document.name}" class="w-full h-48 object-cover rounded-t-lg" onerror="this.onerror=null;this.src='https://placehold.co/600x400/d1d5db/4b5563?text=Image+Missing';">
+                            <div class="p-6">
+                                <h3 class="text-2xl font-semibold text-gray-900 mb-3">${document.name}</h3>
+                                <p class="text-gray-700 mb-4 line-clamp-3">${document.description}</p>
+                                <div class="flex items-center justify-between mb-6">
+                                    <span class="text-3xl font-bold text-green-700">BDT ${document.priceBDT}</span>
+                                    <span class="text-sm text-gray-500 italic">${document.pages} pages</span>
+                                </div>
+                                <div class="flex flex-col space-y-3">
+                                    ${document.accessType === 'bkash_payment' ? `
+                                        <button onclick="showBkashPaymentModal('${document.name}')" class="w-full bg-indigo-600 text-white hover:bg-indigo-700 px-6 py-3 rounded-lg font-semibold shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                                            Buy via Bkash
+                                        </button>
+                                    ` : ''}
+                                    ${document.accessType === 'ad_watch' ? `
+                                        <button onclick="showAdModal('${document.name}')" class="w-full bg-yellow-500 text-gray-900 hover:bg-yellow-600 px-6 py-3 rounded-lg font-semibold shadow-md transform hover:scale-105 transition duration-300 ease-in-out">
+                                            Watch Ad to Access (Free)
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    premiumDocumentsGrid.innerHTML += docElement;
+                });
+            } catch (error) {
+                console.error("Error loading premium documents:", error);
+                premiumDocumentsGrid.innerHTML = '<p class="text-red-500 text-center col-span-full">Error loading premium documents. Please try again later.</p>';
+            }
+        }
+
+
+        // Run functions to load data when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadBlogPosts();
+            loadPremiumDocuments();
+        });
 
         // Function to show a modal
         function showModal(modalId) {

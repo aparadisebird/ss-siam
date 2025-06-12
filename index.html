@@ -168,8 +168,7 @@
                     </a>
                     <a href="#" class="text-gray-600 hover:text-indigo-600 transition duration-300">
                         <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2.417a.75.75 0 01.07.867 8.686 8.686 0 00-1.747 1.839 8.686 8.686 0 00-1.839 1.747.75.75 0 01-.867-.07C2.417 12.315 2 12.007 2 12s.417-10.315 10.315-10.315zM22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V12h2.54v9.878C18.343 21.128 22 16.991 22 12zM12.315 2.417c0-5.523-4.477-10-10-10S-2 6.477-2 12c0 4.991 3.657 9.128 8.438 9.878V12h2.54v9.878C18.343 21.128 22 16.991 22 12zM12.315 2.417a.75.75 0 01.07.867 8.686 8.686 0 00-1.747 1.839 8.686 8.686 0 00-1.839 1.747.75.75 0 01-.867-.07C2.417 12.315 2 12.007 2 12s.417-10.315 10.315-10.315zM22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V12h2.54v9.878C18.343 21.128 22 16.991 22 12zM12.315 2.417a.75.75 0 01.07.867 8.686 8.686 0 00-1.747 1.839 8.686 8.686 0 00-1.839 1.747.75.75 0 01-.867-.07C2.417 12.315 2 12.007 2 12s.417-10.315 10.315-10.315zM22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V12h2.54v9.878C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
-                        </a>
-                    </div>
+                    </a>
                 </div>
             </div>
             <!-- Simple contact form placeholder -->
@@ -349,6 +348,24 @@
                 snapshot.forEach(doc => {
                     const document = doc.data();
                     const docId = doc.id;
+                    let buttonsHtml = '';
+
+                    // Conditionally render buttons based on new boolean fields
+                    if (document.allowBkash) {
+                        buttonsHtml += `
+                            <button onclick="showBkashPaymentModal('${document.name}')" class="w-full bg-indigo-600 text-white hover:bg-indigo-700 px-6 py-3 rounded-lg font-semibold shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                                Buy via Bkash
+                            </button>
+                        `;
+                    }
+                    if (document.allowAd) {
+                        buttonsHtml += `
+                            <button onclick="showAdModal('${document.name}')" class="w-full bg-yellow-500 text-gray-900 hover:bg-yellow-600 px-6 py-3 rounded-lg font-semibold shadow-md transform hover:scale-105 transition duration-300 ease-in-out">
+                                Watch Ad to Access (Free)
+                            </button>
+                        `;
+                    }
+
                     const docElement = `
                         <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
                             <img src="${document.previewImageUrl || 'https://placehold.co/600x400/d1d5db/4b5563?text=Document+Preview'}" alt="${document.name}" class="w-full h-48 object-cover rounded-t-lg" onerror="this.onerror=null;this.src='https://placehold.co/600x400/d1d5db/4b5563?text=Image+Missing';">
@@ -356,20 +373,11 @@
                                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">${document.name}</h3>
                                 <p class="text-gray-700 mb-4 line-clamp-3">${document.description}</p>
                                 <div class="flex items-center justify-between mb-6">
-                                    <span class="text-3xl font-bold text-green-700">BDT ${document.priceBDT}</span>
-                                    <span class="text-sm text-gray-500 italic">${document.pages} pages</span>
+                                    <span class="text-3xl font-bold text-green-700">BDT ${document.priceBDT || 'N/A'}</span>
+                                    <span class="text-sm text-gray-500 italic">${document.pages || 'N/A'} pages</span>
                                 </div>
                                 <div class="flex flex-col space-y-3">
-                                    ${document.accessType === 'bkash_payment' ? `
-                                        <button onclick="showBkashPaymentModal('${document.name}')" class="w-full bg-indigo-600 text-white hover:bg-indigo-700 px-6 py-3 rounded-lg font-semibold shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
-                                            Buy via Bkash
-                                        </button>
-                                    ` : ''}
-                                    ${document.accessType === 'ad_watch' ? `
-                                        <button onclick="showAdModal('${document.name}')" class="w-full bg-yellow-500 text-gray-900 hover:bg-yellow-600 px-6 py-3 rounded-lg font-semibold shadow-md transform hover:scale-105 transition duration-300 ease-in-out">
-                                            Watch Ad to Access (Free)
-                                        </button>
-                                    ` : ''}
+                                    ${buttonsHtml}
                                 </div>
                             </div>
                         </div>

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shifat Shahriar Siam - Public Health & Beyond</title>
+    <!-- Load Tailwind CSS from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Apply Inter font globally and set a base text color */
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #333; /* Dark gray for good readability */
+            background-color: #f9fafb; /* Light gray background */
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Custom styles for Hero Section Background Pattern */
+        .hero-background-pattern {
+            position: relative;
+            overflow: hidden; /* Ensure pattern doesn't spill out */
+        }
+
+        .hero-background-pattern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Subtle radial gradient dots for texture */
+            background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 20px 20px; /* Size of the pattern dots */
+            opacity: 0.3; /* Adjust opacity for subtlety */
+            z-index: 1; /* Ensure pattern is behind the content */
+        }
+
+        /* Keyframe animations for a dynamic feel */
+        @keyframes fade-in-down {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse-light {
+            0%, 100% { box-shadow: 0 0 0 0px rgba(129, 140, 248, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(129, 140, 248, 0); }
+        }
+
+        /* Apply animations to elements */
+        .animate-fade-in-down { animation: fade-in-down 1s ease-out forwards; }
+        .animate-fade-in-up { animation: fade-in-up 1s ease-out forwards; }
+        .animate-pulse-light { animation: pulse-light 2s infinite; }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header class="bg-white shadow-md p-4 sticky top-0 z-50 rounded-b-lg">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <!-- Logo/Site Title -->
+            <a href="#" class="text-3xl font-bold text-indigo-700 hover:text-indigo-900 transition duration-300">
+                Siam's Insight
+            </a>
+
+            <!-- Navigation Menu -->
+            <nav class="mt-4 md:mt-0">
+                <ul class="flex flex-wrap justify-center space-x-4 md:space-x-8">
+                    <li><a href="#home" class="text-gray-700 hover:text-indigo-600 font-medium transition duration-300 p-2 rounded-md">Home</a></li>
+                    <li><a href="#blog" class="text-gray-700 hover:text-indigo-600 font-medium transition duration-300 p-2 rounded-md">Blog</a></li>
+                    <li><a href="#premium-notes" class="text-gray-700 hover:text-indigo-600 font-medium transition duration-300 p-2 rounded-md">Premium Notes</a></li>
+                    <li><a href="#about" class="text-gray-700 hover:text-indigo-600 font-medium transition duration-300 p-2 rounded-md">About</a></li>
+                    <li><a href="#contact" class="text-gray-700 hover:text-indigo-600 font-medium transition duration-300 p-2 rounded-md">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section - Enhanced for Professional Appeal -->
+    <section id="home" class="bg-gradient-to-r from-indigo-700 via-indigo-600 to-purple-800 text-white py-24 px-4 text-center rounded-lg m-4 shadow-2xl relative overflow-hidden hero-background-pattern">
+        <div class="container mx-auto relative z-10"> <!-- Added relative z-10 for content to be above pattern -->
+            <h1 class="text-6xl md:text-7xl font-extrabold leading-tight mb-5 animate-fade-in-down">
+                Shifat Shahriar Siam
+            </h1>
+            <p class="text-2xl md:text-3xl font-light mb-10 max-w-4xl mx-auto opacity-90 animate-fade-in-up">
+                Undergraduate Student of Public Health, Jahangirnagar University, Savar, Dhaka.
+            </p>
+            <p class="text-lg md:text-xl mb-12 max-w-5xl mx-auto opacity-80">
+                Sharing insights on **Public Health, Education, Research, Tech, and more.**
+            </p>
+            <a href="#blog" class="inline-block bg-white text-indigo-800 hover:bg-gray-100 px-10 py-5 rounded-full text-xl font-bold shadow-xl transform hover:scale-105 transition duration-300 ease-in-out">
+                Explore My Blog
+            </a>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section id="blog" class="py-16 px-4 bg-white m-4 rounded-lg shadow-xl">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Latest Blog Posts</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Blog Post Card 1 -->
+                <article class="bg-gray-50 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+                    <img src="https://placehold.co/600x400/9ca3af/ffffff?text=Public+Health+Research" alt="Public Health Research" class="w-full h-48 object-cover rounded-t-lg">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-3">The Future of Public Health Research in Bangladesh</h3>
+                        <p class="text-gray-700 mb-4 line-clamp-3">
+                            Dive into the evolving landscape of public health research, exploring new methodologies and their impact on community well-being. This post discusses challenges and opportunities specific to Bangladesh...
+                        </p>
+                        <div class="flex justify-between items-center text-sm text-gray-500 mb-4">
+                            <span>By Shifat Siam</span>
+                            <span>June 10, 2025</span>
+                            <span>5 min read</span>
+                        </div>
+                        <a href="#" class="text-indigo-600 hover:text-indigo-800 font-semibold flex items-center">
+                            Read More
+                            <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Blog Post Card 2 -->
+                <article class="bg-gray-50 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+                    <img src="https://placehold.co/600x400/a78bfa/ffffff?text=Higher+Education+Tips" alt="Higher Education Tips" class="w-full h-48 object-cover rounded-t-lg">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-3">Navigating Higher Education: Tips for University Students</h3>
+                        <p class="text-gray-700 mb-4 line-clamp-3">
+                            As an undergraduate, I share my personal tips and strategies for excelling in university life, from time management to academic success and extracurriculars...
+                        </p>
+                        <div class="flex justify-between items-center text-sm text-gray-500 mb-4">
+                            <span>By Shifat Siam</span>
+                            <span>June 05, 2025</span>
+                            <span>7 min read</span>
+                        </div>
+                        <a href="#" class="text-indigo-600 hover:text-indigo-800 font-semibold flex items-center">
+                            Read More
+                            <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Blog Post Card 3 -->
+                <article class="bg-gray-50 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+                    <img src="https://placehold.co/600x400/818cf8/ffffff?text=Tech+for+Health" alt="Technology in Health" class="w-full h-48 object-cover rounded-t-lg">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-3">Leveraging Tech for Public Health Initiatives</h3>
+                        <p class="text-gray-700 mb-4 line-clamp-3">
+                            Exploring how cutting-edge technologies like AI, data analytics, and mobile apps are transforming public health interventions globally and locally...
+                        </p>
+                        <div class="flex justify-between items-center text-sm text-gray-500 mb-4">
+                            <span>By Shifat Siam</span>
+                            <span>May 28, 2025</span>
+                            <span>6 min read</span>
+                        </div>
+                        <a href="#" class="text-indigo-600 hover:text-indigo-800 font-semibold flex items-center">
+                            Read More
+                            <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </a>
+                    </div>
+                </article>
+            </div>
+            <div class="text-center mt-12">
+                <a href="#" class="inline-block bg-indigo-600 text-white hover:bg-indigo-700 px-8 py-4 rounded-full text-lg font-semibold shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                    View All Posts
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Premium Notes Section -->
+    <section id="premium-notes" class="py-16 px-4 bg-gray-50 m-4 rounded-lg shadow-xl">
+        <div class="container mx-auto">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Premium Documents & Notes</h2>
+            <p class="text-center text-gray-700 mb-10 max-w-2xl mx-auto">
+                Access exclusive class notes, research guides, and in-depth analyses on public health, education, and various academic topics.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Premium Document Card 1 -->
+                <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+                    <img src="https://placehold.co/600x400/d1d5db/4b5563?text=Epidemiology+Notes" alt="Epidemiology Notes" class="w-full h-48 object-cover rounded-t-lg">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-3">Advanced Epidemiology Study Guide (PDF)</h3>
+                        <p class="text-gray-700 mb-4 line-clamp-3">
+                            Comprehensive notes covering advanced epidemiological concepts, study designs, and statistical methods. Essential for public health students.
+                        </p>
+                        <div class="flex items-center justify-between mb-6">
+                            <span class="text-3xl font-bold text-green-700">BDT 150</span>
+                            <span class="text-sm text-gray-500 italic">25 pages</span>
+                        </div>
+                        <div class="flex flex-col space-y-3">
+                            <!-- Option 1: Bkash Payment Placeholder -->
+                            <button onclick="showBkashPaymentModal('Advanced Epidemiology')" class="w-full bg-indigo-600 text-white hover:bg-indigo-700 px-6 py-3 rounded-lg font-semibold shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                                Buy via Bkash
+                            </button>
+                            <!-- Option 2: Watch Ad Placeholder -->
+                            <button onclick="showAdModal('Advanced Epidemiology')" class="w-full bg-yellow-500 text-gray-900 hover:bg-yellow-600 px-6 py-3 rounded-lg font-semibold shadow-md transform hover:scale-105 transition duration-300 ease-in-out">
+                                Watch Ad to Access (Free)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Premium Document Card 2 -->
+                <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+                    <img src="https://placehold.co/600x400/e0e7ff/4338ca?text=Health+Policy+Analysis" alt="Health Policy Analysis" class="w-full h-48 object-cover rounded-t-lg">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-3">Health Policy Analysis Framework (DOC)</h3>
+                        <p class="text-gray-700 mb-4 line-clamp-3">
+                            A detailed guide on analyzing public health policies, including frameworks, case studies, and critical evaluation methods.
+                        </p>
+                        <div class="flex items-center justify-between mb-6">
+                            <span class="text-3xl font-bold text-green-700">BDT 120</span>
+                            <span class="text-sm text-gray-500 italic">18 pages</span>
+                        </div>
+                        <div class="flex flex-col space-y-3">
+                            <button onclick="showBkashPaymentModal('Health Policy Analysis')" class="w-full bg-indigo-600 text-white hover:bg-indigo-700 px-6 py-3 rounded-lg font-semibold shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                                Buy via Bkash
+                            </button>
+                            <button onclick="showAdModal('Health Policy Analysis')" class="w-full bg-yellow-500 text-gray-900 hover:bg-yellow-600 px-6 py-3 rounded-lg font-semibold shadow-md transform hover:scale-105 transition duration-300 ease-in-out">
+                                Watch Ad to Access (Free)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Premium Document Card 3 -->
+                <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+                    <img src="https://placehold.co/600x400/bfdbfe/1d4ed8?text=Research+Methods" alt="Research Methods Notes" class="w-full h-48 object-cover rounded-t-lg">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-3">Qualitative Research Methods in PH (PDF)</h3>
+                        <p class="text-gray-700 mb-4 line-clamp-3">
+                            An in-depth look into qualitative research methodologies specific to public health, covering interviews, focus groups, and data analysis.
+                        </p>
+                        <div class="flex items-center justify-between mb-6">
+                            <span class="text-3xl font-bold text-green-700">BDT 100</span>
+                            <span class="text-sm text-gray-500 italic">20 pages</span>
+                        </div>
+                        <div class="flex flex-col space-y-3">
+                            <button onclick="showBkashPaymentModal('Qualitative Research Methods')" class="w-full bg-indigo-600 text-white hover:bg-indigo-700 px-6 py-3 rounded-lg font-semibold shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                                Buy via Bkash
+                            </button>
+                            <button onclick="showAdModal('Qualitative Research Methods')" class="w-full bg-yellow-500 text-gray-900 hover:bg-yellow-600 px-6 py-3 rounded-lg font-semibold shadow-md transform hover:scale-105 transition duration-300 ease-in-out">
+                                Watch Ad to Access (Free)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 px-4 bg-white m-4 rounded-lg shadow-xl">
+        <div class="container mx-auto flex flex-col md:flex-row items-center justify-center gap-12">
+            <div class="w-full md:w-1/3 flex justify-center">
+                <img src="https://placehold.co/300x300/a78bfa/ffffff?text=Your+Photo" alt="Shifat Shahriar Siam" class="rounded-full shadow-lg border-4 border-indigo-200 animate-pulse-light">
+            </div>
+            <div class="w-full md:w-2/3 text-center md:text-left">
+                <h2 class="text-4xl font-bold text-gray-800 mb-6">About Shifat Shahriar Siam</h2>
+                <p class="text-lg text-gray-700 mb-4 leading-relaxed">
+                    I am Shifat Shahriar Siam, an undergraduate student majoring in Public Health at Jahangirnagar University, Savar, Dhaka. My academic journey is fueled by a passion for understanding and addressing health challenges within communities.
+                </p>
+                <p class="text-lg text-gray-700 mb-4 leading-relaxed">
+                    Through "Siam's Insight," I aim to share my perspectives, research findings, and educational content on a diverse range of topics including public health, the intricacies of higher education, advancements in research, and the latest trends in technology. My goal is to create a platform for learning, discussion, and resource sharing.
+                </p>
+                <p class="text-lg text-gray-700 leading-relaxed">
+                    Whether you're a fellow student, a public health professional, or just someone curious about these fields, I invite you to explore my thoughts and resources.
+                </p>
+                <div class="mt-8 flex justify-center md:justify-start space-x-6">
+                    <a href="#" class="text-gray-600 hover:text-indigo-600 transition duration-300">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V22C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
+                    </a>
+                    <a href="#" class="text-gray-600 hover:text-indigo-600 transition duration-300">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2.417a.75.75 0 01.07.867 8.686 8.686 0 00-1.747 1.839 8.686 8.686 0 00-1.839 1.747.75.75 0 01-.867-.07C2.417 12.315 2 12.007 2 12s.417-10.315 10.315-10.315zM22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V12h2.54v9.878C18.343 21.128 22 16.991 22 12zM12.315 2.417c0-5.523-4.477-10-10-10S-2 6.477-2 12c0 4.991 3.657 9.128 8.438 9.878V12h2.54v9.878C18.343 21.128 22 16.991 22 12zM12.315 2.417a.75.75 0 01.07.867 8.686 8.686 0 00-1.747 1.839 8.686 8.686 0 00-1.839 1.747.75.75 0 01-.867-.07C2.417 12.315 2 12.007 2 12s.417-10.315 10.315-10.315zM22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V12h2.54v9.878C18.343 21.128 22 16.991 22 12zM12.315 2.417a.75.75 0 01.07.867 8.686 8.686 0 00-1.747 1.839 8.686 8.686 0 00-1.839 1.747.75.75 0 01-.867-.07C2.417 12.315 2 12.007 2 12s.417-10.315 10.315-10.315zM22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V12h2.54v9.878C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
+                        <path d="M12.315 2.417a.75.75 0 01.07.867 8.686 8.686 0 00-1.747 1.839 8.686 8.686 0 00-1.839 1.747.75.75 0 01-.867-.07C2.417 12.315 2 12.007 2 12s.417-10.315 10.315-10.315zM22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V12h2.54v9.878C18.343 21.128 22 16.991 22 12z" /></svg>
+                    </a>
+                    <a href="#" class="text-gray-600 hover:text-indigo-600 transition duration-300">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.026 15.656C3.992 14.197 3.398 12.56 3.398 10.913c0-2.388 1.487-4.471 3.523-5.323L7.75 5.568V1.698l-2.724 1.706C2.923 4.887 1 7.747 1 10.913c0 3.73 2.418 6.9 5.86 8.163L6.963 17.51a8.55 8.55 0 01-1.937-1.854zM23 10.913c0-3.73-2.418-6.9-5.86-8.163L17.037 6.49a8.55 8.55 0 011.937 1.854C20.008 9.803 20.602 11.44 20.602 13.087c0 2.388-1.487 4.471-3.523 5.323l-1.827.876V22.302l2.724-1.706C21.077 19.113 23 16.253 23 13.087zM12 7.026v10.596L6.5 14.498V9.502L12 7.026zm0-2.428L5.5 8.924V15.076L12 17.552v-2.428l6.5-2.924V8.924L12 6.598zm0 15.011l-6.5-2.924V8.924L12 6.598V3.671L18.5 6.598V15.076L12 17.552z" /></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 px-4 bg-gray-100 m-4 rounded-lg shadow-xl">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold text-gray-800 mb-8">Get in Touch</h2>
+            <p class="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
+                Have questions, suggestions, or just want to say hello? Feel free to reach out to me!
+            </p>
+            <div class="flex flex-col md:flex-row justify-center items-center gap-8 mb-12">
+                <div class="p-6 bg-white rounded-lg shadow-md w-full md:w-auto flex flex-col items-center">
+                    <svg class="w-12 h-12 text-indigo-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    <p class="text-xl font-semibold text-gray-800 mb-2">Email Me</p>
+                    <a href="mailto:your.email@example.com" class="text-indigo-600 hover:underline">your.email@example.com</a>
+                </div>
+                <div class="p-6 bg-white rounded-lg shadow-md w-full md:w-auto flex flex-col items-center">
+                    <svg class="w-12 h-12 text-indigo-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586L6 14m.002 0l1.293 1.293a1 1 0 00.707.293h3.996l3.996 3.996V18h2.002a2 2 0 002-2V10a2 2 0 00-2-2h-2V4l-4 4-4-4V4H5a2 2 0 00-2 2v6a2 2 0 002 2h2"></path></svg>
+                    <p class="text-xl font-semibold text-gray-800 mb-2">Connect on Social</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-600 hover:text-indigo-600 transition duration-300">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V22C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
+                        </a>
+                        <a href="#" class="text-gray-600 hover:text-indigo-600 transition duration-300">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2.417a.75.75 0 01.07.867 8.686 8.686 0 00-1.747 1.839 8.686 8.686 0 00-1.839 1.747.75.75 0 01-.867-.07C2.417 12.315 2 12.007 2 12s.417-10.315 10.315-10.315zM22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V12h2.54v9.878C18.343 21.128 22 16.991 22 12zM12.315 2.417c0-5.523-4.477-10-10-10S-2 6.477-2 12c0 4.991 3.657 9.128 8.438 9.878V12h2.54v9.878C18.343 21.128 22 16.991 22 12zM12.315 2.417a.75.75 0 01.07.867 8.686 8.686 0 00-1.747 1.839 8.686 8.686 0 00-1.839 1.747.75.75 0 01-.867-.07C2.417 12.315 2 12.007 2 12s.417-10.315 10.315-10.315zM22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V12h2.54v9.878C18.343 21.128 22 16.991 22 12zM12.315 2.417a.75.75 0 01.07.867 8.686 8.686 0 00-1.747 1.839 8.686 8.686 0 00-1.839 1.747.75.75 0 01-.867-.07C2.417 12.315 2 12.007 2 12s.417-10.315 10.315-10.315zM22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V12h2.54v9.878C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- Simple contact form placeholder -->
+            <form class="max-w-xl mx-auto bg-white p-8 rounded-lg shadow-md">
+                <div class="mb-4">
+                    <label for="name" class="block text-gray-700 text-sm font-bold mb-2 text-left">Your Name</label>
+                    <input type="text" id="name" name="name" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md" placeholder="John Doe">
+                </div>
+                <div class="mb-4">
+                    <label for="email" class="block text-gray-700 text-sm font-bold mb-2 text-left">Your Email</label>
+                    <input type="email" id="email" name="email" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md" placeholder="john.doe@example.com">
+                </div>
+                <div class="mb-6">
+                    <label for="message" class="block text-gray-700 text-sm font-bold mb-2 text-left">Your Message</label>
+                    <textarea id="message" name="message" rows="5" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md" placeholder="Type your message here..."></textarea>
+                </div>
+                <button type="submit" class="bg-indigo-600 text-white hover:bg-indigo-700 px-8 py-4 rounded-full text-lg font-semibold shadow-lg transform hover:scale-105 transition duration-300 ease-in-out">
+                    Send Message
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-800 text-white py-8 px-4 text-center rounded-t-lg mt-4">
+        <div class="container mx-auto">
+            <p class="mb-4">&copy; 2025 Shifat Shahriar Siam. All rights reserved.</p>
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="#" class="text-gray-400 hover:text-white transition duration-300">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-white transition duration-300">Terms of Service</a>
+            </div>
+            <p class="text-sm text-gray-500">Built with passion for Public Health and Education.</p>
+        </div>
+    </footer>
+
+    <!-- Modals for Bkash Payment and Ad Watching (Placeholders) -->
+    <div id="bkashModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Purchase <span id="bkashDocTitle" class="text-indigo-600"></span> via Bkash</h3>
+            <p class="text-gray-700 mb-4">
+                Please send the exact amount to my Bkash Personal Number: <strong class="text-green-700">01XXXXXXXXX</strong>.
+            </p>
+            <p class="text-gray-700 mb-6">
+                After sending money, please submit the Transaction ID (TrxID) below. I will verify it manually and send the document link to your email.
+            </p>
+            <div class="mb-4">
+                <label for="buyerNameBkash" class="block text-gray-700 text-sm font-bold mb-2 text-left">Your Full Name</label>
+                <input type="text" id="buyerNameBkash" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md" placeholder="Your Name">
+            </div>
+            <div class="mb-4">
+                <label for="buyerEmailBkash" class="block text-gray-700 text-sm font-bold mb-2 text-left">Your Email Address</label>
+                <input type="email" id="buyerEmailBkash" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md" placeholder="your.email@example.com">
+            </div>
+            <div class="mb-6">
+                <label for="trxId" class="block text-gray-700 text-sm font-bold mb-2 text-left">Bkash Transaction ID (TrxID)</label>
+                <input type="text" id="trxId" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md" placeholder="ABC123XYZ789">
+            </div>
+            <div class="flex justify-end space-x-4">
+                <button onclick="closeModal('bkashModal')" class="bg-gray-300 text-gray-800 hover:bg-gray-400 px-6 py-3 rounded-lg font-semibold transition duration-300">
+                    Cancel
+                </button>
+                <button onclick="submitBkashOrder()" class="bg-indigo-600 text-white hover:bg-indigo-700 px-6 py-3 rounded-lg font-semibold transition duration-300">
+                    Submit Order
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="adModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Watch Ad to Access <span id="adDocTitle" class="text-indigo-600"></span></h3>
+            <div id="adContainer" class="bg-gray-200 h-48 flex items-center justify-center text-gray-600 text-center rounded-md mb-6">
+                <!-- Google AdSense ad will load here -->
+                <p>Advertisement will load here...</p>
+                <p class="mt-2 text-sm">(Simulated Ad)</p>
+            </div>
+            <p class="text-gray-700 mb-6 text-center">
+                Please watch the entire advertisement to unlock your document.
+            </p>
+            <div class="flex justify-end space-x-4">
+                <button onclick="closeModal('adModal')" class="bg-gray-300 text-gray-800 hover:bg-gray-400 px-6 py-3 rounded-lg font-semibold transition duration-300">
+                    Close
+                </button>
+                <button id="accessDocButton" onclick="accessDocumentAfterAd()" class="bg-green-600 text-white hover:bg-green-700 px-6 py-3 rounded-lg font-semibold transition duration-300 hidden">
+                    Access Document
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for Modal Functionality (Frontend Only) -->
+    <script>
+        // Function to show a modal
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+
+        // Function to close a modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // Show Bkash payment modal
+        function showBkashPaymentModal(docTitle) {
+            document.getElementById('bkashDocTitle').textContent = docTitle;
+            showModal('bkashModal');
+        }
+
+        // Simulate Bkash order submission (no actual backend processing)
+        function submitBkashOrder() {
+            const docTitle = document.getElementById('bkashDocTitle').textContent;
+            const buyerName = document.getElementById('buyerNameBkash').value;
+            const buyerEmail = document.getElementById('buyerEmailBkash').value;
+            const trxId = document.getElementById('trxId').value;
+
+            if (!buyerName || !buyerEmail || !trxId) {
+                alert('Please fill in all fields.'); // Using alert for demo, replace with custom modal
+                return;
+            }
+
+            // In a real application, this data would be sent to your backend server
+            console.log(`Bkash Order for: ${docTitle}`);
+            console.log(`Name: ${buyerName}, Email: ${buyerEmail}, TrxID: ${trxId}`);
+            alert('Your order has been submitted! You will receive an email upon verification. (This is a simulation)'); // Using alert for demo, replace with custom modal
+            closeModal('bkashModal');
+            // Clear the form fields after submission
+            document.getElementById('buyerNameBkash').value = '';
+            document.getElementById('buyerEmailBkash').value = '';
+            document.getElementById('trxId').value = '';
+        }
+
+        // Show Ad modal
+        function showAdModal(docTitle) {
+            document.getElementById('adDocTitle').textContent = docTitle;
+            document.getElementById('accessDocButton').classList.add('hidden'); // Hide access button initially
+            showModal('adModal');
+
+            // Simulate ad loading and completion after a delay
+            setTimeout(() => {
+                document.getElementById('adContainer').innerHTML = '<p class="text-green-700 font-bold">Ad watched successfully!</p>';
+                document.getElementById('accessDocButton').classList.remove('hidden'); // Show access button
+            }, 3000); // Simulate 3 seconds ad watch
+        }
+
+        // Simulate document access after ad (no actual document loading)
+        function accessDocumentAfterAd() {
+            const docTitle = document.getElementById('adDocTitle').textContent;
+            alert(`Document "${docTitle}" is now accessible! (This is a simulation)`); // Using alert for demo, replace with custom modal
+            closeModal('adModal');
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

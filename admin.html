@@ -34,6 +34,20 @@
         .btn-success {
             @apply bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200;
         }
+
+        /* Tab specific styles */
+        .tab-button.active {
+            @apply border-indigo-600 text-indigo-700 font-semibold;
+        }
+        .tab-button {
+            @apply py-3 px-6 text-center border-b-2 border-transparent text-gray-600 hover:text-indigo-600 hover:border-indigo-300 transition duration-200 cursor-pointer;
+        }
+        .tab-content {
+            display: none; /* Hidden by default */
+        }
+        .tab-content.active {
+            display: block; /* Shown when active */
+        }
     </style>
 </head>
 <body>
@@ -44,9 +58,6 @@
             <h1 class="text-3xl font-bold">Admin Panel - Siam's Insight</h1>
             <nav>
                 <ul class="flex space-x-4">
-                    <li><a href="#blog-management" class="hover:text-indigo-200 transition duration-200">Blogs</a></li>
-                    <li><a href="#document-management" class="hover:text-indigo-200 transition duration-200">Documents</a></li>
-                    <li><a href="#purchase-requests" class="hover:text-indigo-200 transition duration-200">Orders</a></li>
                     <li><button id="logoutButton" class="btn-danger ml-4">Logout</button></li>
                 </ul>
             </nav>
@@ -75,118 +86,128 @@
         <section id="adminDashboard" class="hidden">
             <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">Welcome, Admin!</h2>
 
-            <!-- Blog Management Section -->
-            <section id="blog-management" class="bg-white p-8 rounded-lg shadow-xl mb-8">
-                <h3 class="text-3xl font-bold text-gray-800 mb-6">Blog Post Management</h3>
+            <!-- Tab Navigation -->
+            <nav class="flex flex-wrap border-b border-gray-200 mb-8" role="tablist" data-tabs>
+                <button type="button" role="tab" aria-controls="blog-content" id="blog-tab" data-tab-target="blog-content" class="tab-button active">Blog Management</button>
+                <button type="button" role="tab" aria-controls="document-content" id="document-tab" data-tab-target="document-content" class="tab-button">Document Management</button>
+                <button type="button" role="tab" aria-controls="purchases-content" id="purchases-tab" data-tab-target="purchases-content" class="tab-button">Purchase Requests</button>
+            </nav>
 
-                <!-- Add/Edit Blog Post Form -->
-                <div class="mb-8 p-6 border rounded-lg bg-gray-50">
-                    <h4 class="text-2xl font-semibold text-gray-700 mb-4" id="blogFormTitle">Add New Blog Post</h4>
-                    <input type="hidden" id="blogPostId">
-                    <div class="mb-4">
-                        <label for="blogTitle" class="block text-gray-700 text-sm font-bold mb-2">Title</label>
-                        <input type="text" id="blogTitle" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
+            <!-- Tab Content Areas -->
+            <div id="tabContent">
+                <!-- Blog Management Section -->
+                <div id="blog-content" class="tab-content active bg-white p-8 rounded-lg shadow-xl mb-8">
+                    <h3 class="text-3xl font-bold text-gray-800 mb-6">Blog Post Management</h3>
+
+                    <!-- Add/Edit Blog Post Form -->
+                    <div class="mb-8 p-6 border rounded-lg bg-gray-50">
+                        <h4 class="text-2xl font-semibold text-gray-700 mb-4" id="blogFormTitle">Add New Blog Post</h4>
+                        <input type="hidden" id="blogPostId">
+                        <div class="mb-4">
+                            <label for="blogTitle" class="block text-gray-700 text-sm font-bold mb-2">Title</label>
+                            <input type="text" id="blogTitle" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
+                        </div>
+                        <div class="mb-4">
+                            <label for="blogSlug" class="block text-gray-700 text-sm font-bold mb-2">Slug (URL friendly, auto-generated if empty)</label>
+                            <input type="text" id="blogSlug" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md" placeholder="e.g., my-first-blog-post">
+                        </div>
+                        <div class="mb-4">
+                            <label for="blogContent" class="block text-gray-700 text-sm font-bold mb-2">Content</label>
+                            <textarea id="blogContent" rows="10" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md"></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label for="blogAuthor" class="block text-gray-700 text-sm font-bold mb-2">Author</label>
+                            <input type="text" id="blogAuthor" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md" value="Shifat Siam">
+                        </div>
+                        <div class="mb-4">
+                            <label for="blogReadTime" class="block text-gray-700 text-sm font-bold mb-2">Read Time (e.g., 5 min)</label>
+                            <input type="text" id="blogReadTime" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
+                        </div>
+                        <div class="mb-6">
+                            <label for="blogImageUrl" class="block text-gray-700 text-sm font-bold mb-2">Image URL (Placeholder URL or actual image)</label>
+                            <input type="url" id="blogImageUrl" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
+                        </div>
+                        <div class="flex space-x-4">
+                            <button id="saveBlogPostButton" class="btn-primary">Save Blog Post</button>
+                            <button id="cancelEditBlogPostButton" class="btn-secondary hidden">Cancel Edit</button>
+                        </div>
                     </div>
-                    <div class="mb-4">
-                        <label for="blogSlug" class="block text-gray-700 text-sm font-bold mb-2">Slug (URL friendly, auto-generated if empty)</label>
-                        <input type="text" id="blogSlug" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md" placeholder="e.g., my-first-blog-post">
-                    </div>
-                    <div class="mb-4">
-                        <label for="blogContent" class="block text-gray-700 text-sm font-bold mb-2">Content</label>
-                        <textarea id="blogContent" rows="10" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md"></textarea>
-                    </div>
-                    <div class="mb-4">
-                        <label for="blogAuthor" class="block text-gray-700 text-sm font-bold mb-2">Author</label>
-                        <input type="text" id="blogAuthor" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md" value="Shifat Siam">
-                    </div>
-                    <div class="mb-4">
-                        <label for="blogReadTime" class="block text-gray-700 text-sm font-bold mb-2">Read Time (e.g., 5 min)</label>
-                        <input type="text" id="blogReadTime" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
-                    </div>
-                    <div class="mb-6">
-                        <label for="blogImageUrl" class="block text-gray-700 text-sm font-bold mb-2">Image URL (Placeholder URL or actual image)</label>
-                        <input type="url" id="blogImageUrl" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
-                    </div>
-                    <div class="flex space-x-4">
-                        <button id="saveBlogPostButton" class="btn-primary">Save Blog Post</button>
-                        <button id="cancelEditBlogPostButton" class="btn-secondary hidden">Cancel Edit</button>
+
+                    <!-- Blog Posts List -->
+                    <div>
+                        <h4 class="text-2xl font-semibold text-gray-700 mb-4">Existing Blog Posts</h4>
+                        <div id="blogPostsList" class="space-y-4">
+                            <!-- Blog posts will be loaded here dynamically -->
+                            <p class="text-gray-600 text-center">Loading blog posts...</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Blog Posts List -->
-                <div>
-                    <h4 class="text-2xl font-semibold text-gray-700 mb-4">Existing Blog Posts</h4>
-                    <div id="blogPostsList" class="space-y-4">
-                        <!-- Blog posts will be loaded here dynamically -->
-                        <p class="text-gray-600 text-center">Loading blog posts...</p>
+                <!-- Premium Document Management Section -->
+                <div id="document-content" class="tab-content bg-white p-8 rounded-lg shadow-xl mb-8">
+                    <h3 class="text-3xl font-bold text-gray-800 mb-6">Premium Document Management</h3>
+
+                    <!-- Add/Edit Document Form -->
+                    <div class="mb-8 p-6 border rounded-lg bg-gray-50">
+                        <h4 class="text-2xl font-semibold text-gray-700 mb-4" id="docFormTitle">Add New Premium Document</h4>
+                        <input type="hidden" id="docId">
+                        <div class="mb-4">
+                            <label for="docName" class="block text-gray-700 text-sm font-bold mb-2">Document Name</label>
+                            <input type="text" id="docName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
+                        </div>
+                        <div class="mb-4">
+                            <label for="docDescription" class="block text-gray-700 text-sm font-bold mb-2">Description</label>
+                            <textarea id="docDescription" rows="5" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md"></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label for="docPrice" class="block text-gray-700 text-sm font-bold mb-2">Price (BDT)</label>
+                            <input type="number" id="docPrice" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
+                        </div>
+                        <div class="mb-4">
+                            <label for="docPages" class="block text-gray-700 text-sm font-bold mb-2">Number of Pages</label>
+                            <input type="number" id="docPages" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
+                        </div>
+                        <div class="mb-4">
+                            <label for="docPreviewImageUrl" class="block text-gray-700 text-sm font-bold mb-2">Preview Image URL</label>
+                            <input type="url" id="docPreviewImageUrl" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
+                        </div>
+                        <div class="mb-6">
+                            <label for="docExternalDownloadUrl" class="block text-gray-700 text-sm font-bold mb-2">External Download URL (e.g., Google Drive link)</label>
+                            <input type="url" id="docExternalDownloadUrl" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
+                            <p class="text-sm text-gray-500 mt-1">Provide a direct public link if using external storage (e.g., Google Drive, Dropbox).</p>
+                        </div>
+                        <div class="mb-6">
+                            <label for="docAccessType" class="block text-gray-700 text-sm font-bold mb-2">Access Type</label>
+                            <select id="docAccessType" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
+                                <option value="bkash_payment">Bkash Payment</option>
+                                <option value="ad_watch">Ad Watch</option>
+                            </select>
+                        </div>
+                        <div class="flex space-x-4">
+                            <button id="saveDocButton" class="btn-primary">Save Document</button>
+                            <button id="cancelEditDocButton" class="btn-secondary hidden">Cancel Edit</button>
+                        </div>
+                    </div>
+
+                    <!-- Premium Documents List -->
+                    <div>
+                        <h4 class="text-2xl font-semibold text-gray-700 mb-4">Existing Premium Documents</h4>
+                        <div id="premiumDocumentsList" class="space-y-4">
+                            <!-- Documents will be loaded here dynamically -->
+                            <p class="text-gray-600 text-center">Loading documents...</p>
+                        </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- Premium Document Management Section -->
-            <section id="document-management" class="bg-white p-8 rounded-lg shadow-xl mb-8">
-                <h3 class="text-3xl font-bold text-gray-800 mb-6">Premium Document Management</h3>
-
-                <!-- Add/Edit Document Form -->
-                <div class="mb-8 p-6 border rounded-lg bg-gray-50">
-                    <h4 class="text-2xl font-semibold text-gray-700 mb-4" id="docFormTitle">Add New Premium Document</h4>
-                    <input type="hidden" id="docId">
-                    <div class="mb-4">
-                        <label for="docName" class="block text-gray-700 text-sm font-bold mb-2">Document Name</label>
-                        <input type="text" id="docName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
-                    </div>
-                    <div class="mb-4">
-                        <label for="docDescription" class="block text-gray-700 text-sm font-bold mb-2">Description</label>
-                        <textarea id="docDescription" rows="5" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md"></textarea>
-                    </div>
-                    <div class="mb-4">
-                        <label for="docPrice" class="block text-gray-700 text-sm font-bold mb-2">Price (BDT)</label>
-                        <input type="number" id="docPrice" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
-                    </div>
-                    <div class="mb-4">
-                        <label for="docPages" class="block text-gray-700 text-sm font-bold mb-2">Number of Pages</label>
-                        <input type="number" id="docPages" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
-                    </div>
-                    <div class="mb-4">
-                        <label for="docPreviewImageUrl" class="block text-gray-700 text-sm font-bold mb-2">Preview Image URL</label>
-                        <input type="url" id="docPreviewImageUrl" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
-                    </div>
-                    <div class="mb-6">
-                        <label for="docExternalDownloadUrl" class="block text-gray-700 text-sm font-bold mb-2">External Download URL (e.g., Google Drive link)</label>
-                        <input type="url" id="docExternalDownloadUrl" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
-                        <p class="text-sm text-gray-500 mt-1">Provide a direct public link if using external storage (e.g., Google Drive, Dropbox).</p>
-                    </div>
-                     <div class="mb-6">
-                        <label for="docAccessType" class="block text-gray-700 text-sm font-bold mb-2">Access Type</label>
-                        <select id="docAccessType" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
-                            <option value="bkash_payment">Bkash Payment</option>
-                            <option value="ad_watch">Ad Watch</option>
-                        </select>
-                    </div>
-                    <div class="flex space-x-4">
-                        <button id="saveDocButton" class="btn-primary">Save Document</button>
-                        <button id="cancelEditDocButton" class="btn-secondary hidden">Cancel Edit</button>
+                <!-- Purchase Requests Section -->
+                <div id="purchases-content" class="tab-content bg-white p-8 rounded-lg shadow-xl mb-8">
+                    <h3 class="text-3xl font-bold text-gray-800 mb-6">Purchase Requests (Bkash)</h3>
+                    <div id="purchaseRequestsList" class="space-y-4">
+                        <!-- Purchase requests will be loaded here dynamically -->
+                        <p class="text-gray-600 text-center">Loading purchase requests...</p>
                     </div>
                 </div>
-
-                <!-- Premium Documents List -->
-                <div>
-                    <h4 class="text-2xl font-semibold text-gray-700 mb-4">Existing Premium Documents</h4>
-                    <div id="premiumDocumentsList" class="space-y-4">
-                        <!-- Documents will be loaded here dynamically -->
-                        <p class="text-gray-600 text-center">Loading documents...</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Purchase Requests Section -->
-            <section id="purchase-requests" class="bg-white p-8 rounded-lg shadow-xl mb-8">
-                <h3 class="text-3xl font-bold text-gray-800 mb-6">Purchase Requests (Bkash)</h3>
-                <div id="purchaseRequestsList" class="space-y-4">
-                    <!-- Purchase requests will be loaded here dynamically -->
-                    <p class="text-gray-600 text-center">Loading purchase requests...</p>
-                </div>
-            </section>
+            </div>
         </section>
 
         <!-- Message/Notification Area (for general feedback) -->
@@ -217,7 +238,6 @@
 
         // --- Admin UID ---
         // IMPORTANT: Replace this with your actual Firebase Admin User UID.
-        // You obtained this in Step 2.D of the setup guide.
         const ADMIN_UID = 'z2MTiFRlTGcDYIaft5zxkjBM8rS2';
 
         // --- DOM Elements ---
@@ -229,6 +249,10 @@
         const loginMessage = document.getElementById('loginMessage');
         const logoutButton = document.getElementById('logoutButton');
         const messageArea = document.getElementById('messageArea');
+
+        // Tab elements
+        const tabButtons = document.querySelectorAll('[data-tab-target]');
+        const tabContents = document.querySelectorAll('.tab-content');
 
         // Blog elements
         const blogFormTitle = document.getElementById('blogFormTitle');
@@ -306,6 +330,21 @@
             cancelEditDocButton.classList.add('hidden');
         }
 
+        // --- Tab Logic ---
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.dataset.tabTarget;
+                const targetContent = document.getElementById(targetId);
+
+                tabContents.forEach(content => content.classList.remove('active'));
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+
+                targetContent.classList.add('active');
+                button.classList.add('active');
+            });
+        });
+
+
         // --- Authentication Logic ---
         // Listen for authentication state changes
         auth.onAuthStateChanged(user => {
@@ -316,6 +355,10 @@
                 loadBlogPosts(); // Load initial data
                 loadPremiumDocuments();
                 loadPurchaseRequests();
+                // Ensure initial tab is active
+                document.getElementById('blog-content').classList.add('active');
+                document.getElementById('blog-tab').classList.add('active');
+
             } else {
                 // Not logged in or not admin
                 loginSection.classList.remove('hidden');
@@ -637,7 +680,7 @@
                     if (order.status === 'pending') {
                         statusColor = 'bg-yellow-100 text-yellow-800';
                         actionButtons = `
-                            <input type="url" id="link-${orderId}" class="shadow appearance-none border rounded w-60 py-1 px-2 text-gray-700 leading-tight rounded-md mr-2" placeholder="Document Download URL">
+                            <input type="url" id="link-${orderId}" class="shadow appearance-none border rounded w-60 py-1 px-2 text-gray-700 leading-tight rounded-md mr-2" placeholder="Document Download URL" value="${order.generatedDownloadLink || ''}">
                             <button onclick="approveOrder('${orderId}', document.getElementById('link-${orderId}').value)" class="btn-success text-sm mr-2">Approve</button>
                             <button onclick="rejectOrder('${orderId}')" class="btn-danger text-sm">Reject</button>
                         `;
@@ -678,14 +721,14 @@
                 return;
             }
             // Optional: Confirm with the user if the link is correct
-            if (confirm('Are you sure you want to approve this order? The download link will be recorded.')) {
+            if (confirm('Approve order ' + orderId + ' and record this link: ' + downloadLink + '? Remember to manually send the email to the buyer.')) {
                 try {
                     await db.collection('bkashOrders').doc(orderId).update({
                         status: 'approved',
                         generatedDownloadLink: downloadLink,
                         approvalDate: new Date().toISOString()
                     });
-                    showMessage('Order approved successfully! Remember to manually send the email to the buyer with the link.', 'success');
+                    showMessage('Order approved successfully! Manual email reminder.', 'success');
                 } catch (error) {
                     console.error("Error approving order:", error);
                     showMessage('Error approving order.', 'error');
@@ -703,7 +746,7 @@
                     });
                     showMessage('Order rejected successfully!', 'success');
                 } catch (error) {
-                    console.error("Error rejecting order:", error);
+                        console.error("Error rejecting order:", error);
                     showMessage('Error rejecting order.', 'error');
                 }
             }

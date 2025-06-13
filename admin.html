@@ -8,6 +8,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Load Inter font from Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- TinyMCE Script - Using your provided API key -->
+    <script src="https://cdn.tiny.cloud/1/q1pibeckxw15ffl3jf95s9pi3bbmsoq7m49bmbzwcqyrxxtc/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
     <style>
         /* Apply Inter font globally */
         body {
@@ -181,6 +184,7 @@
                         </div>
                         <div class="mb-4">
                             <label for="blogContent" class="block text-gray-700 text-sm font-bold mb-2">Content</label>
+                            <!-- TinyMCE will initialize on this textarea -->
                             <textarea id="blogContent" rows="10" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md"></textarea>
                         </div>
                         <div class="mb-4">
@@ -244,7 +248,7 @@
                             <input type="url" id="docExternalDownloadUrl" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
                             <p class="text-sm text-gray-500 mt-1">Provide a direct public link if using external storage (e.g., Google Drive, Dropbox).</p>
                         </div>
-                        <!-- New: Checkboxes for Access Options -->
+                        <!-- Checkboxes for Access Options -->
                         <div class="mb-6">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Access Options:</label>
                             <div class="flex items-center mb-2">
@@ -335,7 +339,7 @@
         const blogPostIdInput = document.getElementById('blogPostId');
         const blogTitleInput = document.getElementById('blogTitle');
         const blogSlugInput = document.getElementById('blogSlug');
-        const blogContentInput = document.getElementById('blogContent');
+        const blogContentInput = document.getElementById('blogContent'); // Target TinyMCE
         const blogAuthorInput = document.getElementById('blogAuthor');
         const blogReadTimeInput = document.getElementById('blogReadTime');
         const blogImageUrlInput = document.getElementById('blogImageUrl');
@@ -388,7 +392,10 @@
             blogPostIdInput.value = '';
             blogTitleInput.value = '';
             blogSlugInput.value = '';
-            blogContentInput.value = '';
+            // Clear TinyMCE content
+            if (tinymce.get('blogContent')) {
+                tinymce.get('blogContent').setContent('');
+            }
             blogReadTimeInput.value = '';
             blogImageUrlInput.value = '';
             saveBlogPostButton.textContent = 'Save Blog Post';
@@ -497,6 +504,19 @@
         });
 
         // --- Blog Post Management ---
+        // TinyMCE initialization
+        tinymce.init({
+            selector: '#blogContent', // ID of the textarea to turn into a rich text editor
+            plugins: 'advlist autolink lists link image charmap print preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste code help wordcount',
+            toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help | image link code',
+            content_style: 'body { font-family: "Inter", sans-serif; font-size:16px }',
+            height: 400, // Adjust height as needed
+            // Optional: If you want to enable image uploads directly to Firebase Storage,
+            // you'd need to set up server-side code (e.g., Vercel Serverless Function) for `images_upload_url`
+            // images_upload_url: '/api/upload-image', // Example API endpoint
+            // images_upload_handler: function (blobInfo, success, failure) { ... custom upload logic ... }
+        });
+
         // Load Blog Posts (Real-time listener)
         function loadBlogPosts() {
             db.collection('blogPosts').orderBy('date', 'desc').onSnapshot(snapshot => {
@@ -534,7 +554,8 @@
             const postId = blogPostIdInput.value;
             const title = blogTitleInput.value.trim();
             let slug = blogSlugInput.value.trim(); // Use let as slug might be updated
-            const content = blogContentInput.value.trim();
+            // Get content directly from TinyMCE editor instance
+            const content = tinymce.get('blogContent').getContent().trim();
             const author = blogAuthorInput.value.trim();
             const readTime = blogReadTimeInput.value.trim();
             const imageUrl = blogImageUrlInput.value.trim();
@@ -592,7 +613,10 @@
                     blogPostIdInput.value = postId;
                     blogTitleInput.value = post.title;
                     blogSlugInput.value = post.slug || ''; // Ensure slug field is populated
-                    blogContentInput.value = post.content;
+                    // Set content to TinyMCE editor
+                    if (tinymce.get('blogContent')) {
+                        tinymce.get('blogContent').setContent(post.content);
+                    }
                     blogAuthorInput.value = post.author;
                     blogReadTimeInput.value = post.readTime;
                     blogImageUrlInput.value = post.imageUrl;
@@ -773,13 +797,13 @@
                     if (order.status === 'pending') {
                         statusColor = 'bg-yellow-100 text-yellow-800';
                         actionButtons = `
-                            <input type="url" id="link-${orderId}" class="shadow appearance-none border rounded w-60 py-1 px-2 text-gray-700 leading-tight rounded-md mr-2" placeholder="Document Download URL" value="${order.generatedDownloadLink || ''}">
+                            <input type="url" id="link-${orderId}" class="shadow appearance-none border rounded w-60 py-1 px-2 text-gray-700 leading-tight rounded-md mr-2" placeholder="Document Download URL" value="${order.documentUrl || order.generatedDownloadLink || ''}">
                             <button onclick="approveOrder('${orderId}', document.getElementById('link-${orderId}').value)" class="btn-success text-sm mr-2">Approve</button>
                             <button onclick="rejectOrder('${orderId}')" class="btn-danger text-sm">Reject</button>
                         `;
                     } else if (order.status === 'approved') {
                         statusColor = 'bg-green-100 text-green-800';
-                        downloadLinkDisplay = `<p class="text-xs text-gray-600 mt-2">Link: <a href="${order.generatedDownloadLink}" target="_blank" class="text-blue-500 hover:underline truncate">${order.generatedDownloadLink}</a></p>`;
+                        downloadLinkDisplay = `<p class="text-xs text-gray-600 mt-2">Link: <a href="${order.documentUrl || order.generatedDownloadLink}" target="_blank" class="text-blue-500 hover:underline truncate">${order.documentUrl || order.generatedDownloadLink}</a></p>`;
                     } else if (order.status === 'rejected') {
                         statusColor = 'bg-red-100 text-red-800';
                     }

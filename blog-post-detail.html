@@ -297,105 +297,291 @@
             }
         }
 
-        // --- Load Blog Post from Firestore (for detail page) ---
-        async function loadBlogPost() {
-            console.log("loadBlogPost function started.");
-            const postSlug = getQueryParam('slug');
-            const blogPostContentDiv = document.getElementById('blogPostContent');
-            const pageTitle = document.getElementById('pageTitle');
-
-            if (!postSlug) {
-                console.error("Error: Blog post slug not found in URL.");
-                blogPostContentDiv.innerHTML = '<h2 class="text-2xl font-bold text-red-600 text-center">Error: Blog post not specified.</h2><p class="text-center text-gray-600 mt-4">Please go back to the <a href="index.html#blog" class="text-indigo-600 hover:underline">blog list</a>.</p>';
-                pageTitle.textContent = 'Error - Siam\'s Insight';
-                return;
-            }
-            console.log(`Attempting to load post with slug: ${postSlug}`);
-
+        // Load Blog Posts from Firestore
+        async function loadBlogPosts() {
+            blogPostsGrid.innerHTML = '<p class="text-gray-600 text-center col-span-full">Loading blog posts...</p>';
             try {
-                const snapshot = await db.collection('blogPosts').where('slug', '==', postSlug).limit(1).get();
-                console.log("Firestore query executed.");
+                const snapshot = await db.collection('blogPosts').orderBy('date', 'desc').get();
+                blogPostsGrid.innerHTML = '';
 
                 if (snapshot.empty) {
-                    console.warn(`Blog post with slug '${postSlug}' not found.`);
-                    blogPostContentDiv.innerHTML = `
-                        <h2 class="text-2xl font-bold text-red-600 text-center">Blog post not found.</h2>
-                        <p class="text-center text-gray-600 mt-4">The post "${postSlug}" could not be found. Please check the URL or go back to the <a href="index.html#blog" class="text-indigo-600 hover:underline">blog list</a>.</p>
-                    `;
-                    pageTitle.textContent = 'Post Not Found - Siam\'s Insight';
+                    blogPostsGrid.innerHTML = '<p class="text-gray-600 text-center col-span-full">No blog posts published yet.</p>';
                     return;
                 }
 
-                const doc = snapshot.docs[0];
-                const post = doc.data();
-                const postId = doc.id;
+                snapshot.forEach(doc => {
+                    const post = doc.data();
+                    const postId = doc.id; // Get the document ID for interaction
+                    const postDate = new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                    
+                    const truncatedContent = truncateHtml(post.content, 200); // Adjust 200 for desired preview length
 
-                console.log("Blog post data loaded:", post);
-
-                const postDate = new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-
-                blogPostContentDiv.innerHTML = `
-                    <div class="mb-8">
-                        <img src="${post.imageUrl || 'https://placehold.co/800x400/9ca3af/ffffff?text=Blog+Image'}" alt="${post.title}" class="w-full h-auto max-h-96 object-cover rounded-lg mb-6 shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/800x400/9ca3af/ffffff?text=Image+Missing';">
-                        <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">${post.title}</h1>
-                        
-                        <!-- Author, Date, and Interaction Counts -->
-                        <div class="flex items-center text-lg text-gray-600 mb-6 flex-wrap">
-                            <img src="https://i.postimg.cc/3NjnNC0N/IMG-20250112-145354-650.webp" alt="Author Photo" class="w-8 h-8 rounded-full object-cover mr-2 border border-gray-300">
-                            By <a href="index.html#about" class="text-indigo-600 hover:underline ml-1 font-semibold">${post.author}</a> 
-                            <span class="mx-2">&bull;</span> ${postDate}
-                            
-                            <span class="flex items-center ml-4 space-x-3">
-                                <button onclick="incrementLike('${postId}')" class="flex items-center text-green-600 hover:text-green-700 transition duration-200">
-                                    <svg class="w-5 h-5 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thumbs-up"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
-                                    <span id="likesCount">${post.likes || 0}</span>
-                                </button>
-                                <button onclick="incrementDislike('${postId}')" class="flex items-center text-red-600 hover:text-red-700 transition duration-200">
-                                    <svg class="w-5 h-5 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thumbs-down"><path d="M10 15V19a3 3 0 0 0 3 3l4-9V3H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zM17 2H20a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"></path></svg>
-                                    <span id="dislikesCount">${post.dislikes || 0}</span>
-                                </button>
-                                <div class="flex items-center ml-2">
-                                    <svg class="w-5 h-5 mr-1 text-gray-500" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                                    <span id="viewsCount">${post.views || 0} Views</span>
+                    const postElement = `
+                        <article class="bg-gray-50 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+                            <img src="${post.imageUrl || 'https://placehold.co/600x400/9ca3af/ffffff?text=Blog+Image'}" alt="${post.title}" class="w-full h-48 object-cover rounded-t-lg" onerror="this.onerror=null;this.src='https://placehold.co/600x400/9ca3af/ffffff?text=Image+Missing';">
+                            <div class="p-6">
+                                <a href="blog-post-detail.html?slug=${post.slug}" class="block">
+                                    <h3 class="text-2xl font-semibold text-gray-900 mb-3 hover:text-indigo-700 transition duration-300">${post.title}</h3>
+                                </a>
+                                <p class="text-gray-700 mb-4">${truncatedContent}</p>
+                                <div class="flex justify-between items-center text-sm text-gray-500 mb-4">
+                                    <span>By <a href="index.html#about" class="text-indigo-600 hover:underline">${post.author}</a></span>
+                                    <span>${postDate}</span>
                                 </div>
-                            </span>
-                        </div>
-                        
-                        <div class="prose max-w-none text-gray-800 leading-relaxed text-lg">
-                            ${post.content}
-                        </div>
-                        <div class="mt-10 pt-6 border-t border-gray-200">
-                            <a href="index.html#blog" class="inline-block bg-indigo-600 text-white hover:bg-indigo-700 px-6 py-3 rounded-md text-base font-semibold shadow-md transition duration-300">
-                                &larr; Back to all Blogs
-                            </a>
-                        </div>
-                    </div>
-                `;
-                pageTitle.textContent = `${post.title} - Siam's Insight`;
-
-                // Record the view after the post has successfully loaded
-                recordView(postId);
-
-                // Optional: Update counts on the fly without full page reload if the user clicks like/dislike
-                // For this, you'd need to create event listeners for the new buttons within loadBlogPost
-                // and fetch the updated counts. For simplicity and to avoid complexity,
-                // we'll leave it to the next page load for updates after an interaction.
-
+                                <a href="blog-post-detail.html?slug=${post.slug}" class="text-indigo-600 hover:text-indigo-800 font-semibold flex items-center mb-4">
+                                    Read More
+                                    <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                                </a>
+                                <!-- Like, Dislike, Views Buttons -->
+                                <div class="flex items-center justify-between text-sm text-gray-600 mt-4 pt-4 border-t border-gray-200">
+                                    <div class="flex items-center space-x-3">
+                                        <button onclick="incrementLike('${postId}')" class="flex items-center text-green-600 hover:text-green-700 transition duration-200">
+                                            <svg class="w-5 h-5 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thumbs-up"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+                                            <span>${post.likes || 0}</span>
+                                        </button>
+                                        <button onclick="incrementDislike('${postId}')" class="flex items-center text-red-600 hover:text-red-700 transition duration-200">
+                                            <svg class="w-5 h-5 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thumbs-down"><path d="M10 15V19a3 3 0 0 0 3 3l4-9V3H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zM17 2H20a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"></path></svg>
+                                            <span>${post.dislikes || 0}</span>
+                                        </button>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <svg class="w-5 h-5 mr-1 text-gray-500" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                                        <span>${post.views || 0} Views</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    `;
+                    blogPostsGrid.innerHTML += postElement;
+                });
             } catch (error) {
-                console.error("Error loading blog post (catch block):", error);
-                blogPostContentDiv.innerHTML = `<h2 class="text-2xl font-bold text-red-600 text-center">Error loading blog post.</h2><p class="text-center text-gray-600 mt-4">Details: ${error.message}. Please try again later. Ensure a Firestore index exists for 'slug' field on 'blogPosts' collection.</p>`;
-                pageTitle.textContent = 'Error - Siam\'s Insight';
+                console.error("Error loading blog posts:", error);
+                blogPostsGrid.innerHTML = '<p class="text-red-500 text-center col-span-full">Error loading blog posts. Please try again later.</p>';
             }
         }
 
-        // Function to get query parameter from URL (utility for detail page)
-        function getQueryParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
+        // Load Premium Documents (Remains the same as previous update)
+        async function loadPremiumDocuments() {
+            premiumDocumentsGrid.innerHTML = '<p class="text-gray-600 text-center col-span-full">Loading premium documents...</p>';
+            try {
+                const snapshot = await db.collection('premiumDocuments').get();
+                premiumDocumentsGrid.innerHTML = '';
+
+                if (snapshot.empty) {
+                    premiumDocumentsGrid.innerHTML = '<p class="text-gray-600 text-center col-span-full">No premium documents available yet.</p>';
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const document = doc.data();
+                    let buttonsHtml = '';
+
+                    const allowBkash = !!document.allowBkash;
+                    const allowAd = !!document.allowAd;
+
+                    if (allowBkash) {
+                        buttonsHtml += `
+                            <button onclick="showBkashPaymentModal('${document.name}')" class="w-full bg-indigo-600 text-white hover:bg-indigo-700 px-6 py-3 rounded-lg font-semibold shadow-lg transform hover:scale-105 transition duration-300 ease-in-out mb-2">
+                                Buy via Bkash
+                            </button>
+                        `;
+                    }
+                    if (allowAd) {
+                        buttonsHtml += `
+                            <button onclick="showAdModal('${document.name}')" class="w-full bg-yellow-500 text-gray-900 hover:bg-yellow-600 px-6 py-3 rounded-lg font-semibold shadow-md transform hover:scale-105 transition duration-300 ease-in-out">
+                                Watch Ad to Access (Free)
+                            </button>
+                        `;
+                    }
+                    if (!allowBkash && !allowAd) {
+                        buttonsHtml = '<p class="text-gray-500 text-center text-sm">Access options not available for this document.</p>';
+                    }
+
+
+                    const docElement = `
+                        <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+                            <img src="${document.previewImageUrl || 'https://placehold.co/600x400/d1d5db/4b5563?text=Document+Preview'}" alt="${document.name}" class="w-full h-48 object-cover rounded-t-lg" onerror="this.onerror=null;this.src='https://placehold.co/600x400/d1d5db/4b5563?text=Image+Missing';">
+                            <div class="p-6">
+                                <h3 class="text-2xl font-semibold text-gray-900 mb-3">${document.name}</h3>
+                                <p class="text-gray-700 mb-4 line-clamp-3">${document.description}</p>
+                                <div class="flex items-center justify-between mb-6">
+                                    <span class="text-3xl font-bold text-green-700">BDT ${document.priceBDT || 'N/A'}</span>
+                                    <span class="text-sm text-gray-500 italic">${document.pages || 'N/A'} pages</span>
+                                </div>
+                                <div class="flex flex-col space-y-3">
+                                    ${buttonsHtml}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    premiumDocumentsGrid.innerHTML += docElement;
+                });
+            } catch (error) {
+                console.error("Error loading premium documents:", error);
+                premiumDocumentsGrid.innerHTML = '<p class="text-red-500 text-center col-span-full">Error loading premium documents. Please try again later.</p>';
+            }
         }
 
-        // Call the function to load the blog post when the page loads
-        document.addEventListener('DOMContentLoaded', loadBlogPost);
+
+        // Run functions to load data when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadBlogPosts();
+            loadPremiumDocuments();
+        });
+
+        // Function to show a modal (remains same)
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+
+        // Function to close a modal (remains same)
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // Show Bkash payment modal (remains same)
+        function showBkashPaymentModal(docTitle) {
+            document.getElementById('bkashDocTitle').textContent = docTitle;
+            showModal('bkashModal');
+        }
+
+        // Function to submit Bkash order to Firestore (remains same)
+        async function submitBkashOrder() {
+            const docTitle = document.getElementById('bkashDocTitle').textContent;
+            const buyerName = document.getElementById('buyerNameBkash').value;
+            const buyerEmail = document.getElementById('buyerEmailBkash').value;
+            const trxId = document.getElementById('trxId').value;
+
+            if (!buyerName || !buyerEmail || !trxId) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            let userId = null;
+            try {
+                const userCredential = await auth.signInAnonymously();
+                userId = userCredential.user.uid;
+                console.log("Signed in anonymously with UID:", userId);
+            } catch (error) {
+                console.error("Authentication error during order:", error);
+                alert("Authentication error during order. Please try again. (Check console for details)");
+                return;
+            }
+
+            let documentData = null;
+            let documentFirestoreId = null;
+            try {
+                const docSnapshot = await db.collection('premiumDocuments').where('name', '==', docTitle).limit(1).get();
+                if (!docSnapshot.empty) {
+                    documentData = docSnapshot.docs[0].data();
+                    documentFirestoreId = docSnapshot.docs[0].id;
+                } else {
+                    alert('Error: Document details not found for purchase. Please contact support.');
+                    console.error('Premium document not found in Firestore for title:', docTitle);
+                    return;
+                }
+            } catch (error) {
+                console.error("Error fetching document details for order:", error);
+                alert("Error fetching document details for purchase. Please try again. (Check console for details)");
+                return;
+            }
+
+            try {
+                await db.collection('bkashOrders').add({
+                    documentName: docTitle,
+                    buyerName: buyerName,
+                    buyerEmail: buyerEmail,
+                    bkashTrxId: trxId,
+                    orderDate: new Date().toISOString(),
+                    status: 'pending',
+                    userId: userId,
+                    documentFirestoreId: documentFirestoreId,
+                    documentUrl: documentData.externalDownloadUrl || ''
+                });
+                alert('Your order has been submitted successfully! You will receive an email upon verification. Thank you!');
+                closeModal('bkashModal');
+                document.getElementById('buyerNameBkash').value = '';
+                document.getElementById('buyerEmailBkash').value = '';
+                document.getElementById('trxId').value = '';
+            } catch (error) {
+                console.error("Error adding order document to Firestore:", error);
+                alert("There was an error submitting your order. Please try again. (Check console for details)");
+            }
+        }
+
+        // Show Ad modal (remains same, with AdSense integration)
+        function showAdModal(docTitle) {
+            document.getElementById('adDocTitle').textContent = docTitle;
+            document.getElementById('accessDocButton').classList.add('hidden');
+            document.getElementById('adContainer').innerHTML = '<p class="text-center text-gray-600">Loading advertisement...</p>';
+
+            showModal('adModal');
+
+            const adUnitHtml = `
+                <ins class="adsbygoogle"
+                     style="display:block; text-align:center; min-height: 100px; min-width: 100px;"
+                     data-ad-client="ca-pub-6894065582382364"
+                     data-ad-slot="1570571656"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+            `;
+            document.getElementById('adContainer').innerHTML = adUnitHtml;
+
+            if (window.adsbygoogle && window.adsbygoogle.push) {
+                (window.adsbygoogle = window.adsbygoogle || []).push({});
+            } else {
+                console.warn("AdSense script not loaded or not ready. Ad might not display.");
+            }
+
+            setTimeout(() => {
+                document.getElementById('adContainer').innerHTML = `
+                    <div class="flex flex-col items-center justify-center p-4">
+                        <svg class="w-16 h-16 text-green-500 mb-4" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <p class="text-green-700 font-bold text-lg">Ad watched successfully!</p>
+                        <p class="text-gray-500 text-sm mt-1">Access button will appear shortly.</p>
+                    </div>
+                `;
+                document.getElementById('accessDocButton').classList.remove('hidden');
+            }, 3000);
+        }
+
+        // Simulate document access after ad (remains same)
+        async function accessDocumentAfterAd() {
+            const docTitle = document.getElementById('adDocTitle').textContent;
+            let documentData = null;
+            try {
+                const docSnapshot = await db.collection('premiumDocuments').where('name', '==', docTitle).limit(1).get();
+                if (!docSnapshot.empty) {
+                    documentData = docSnapshot.docs[0].data();
+                    const downloadUrl = documentData.externalDownloadUrl;
+                    if (downloadUrl) {
+                        alert(`Document "${docTitle}" is now accessible! Opening download link.`);
+                        window.open(downloadUrl, '_blank');
+                    } else {
+                        alert(`Document "${docTitle}" is accessible, but no download link found. Please contact support.`);
+                        console.error(`Download URL missing for document: ${docTitle}`);
+                    }
+                } else {
+                    alert('Error: Premium document details not found for ad access. Please contact support.');
+                    console.error('Premium document not found in Firestore for ad access for title:', docTitle);
+                }
+            } catch (error) {
+                console.error("Error fetching document for ad access:", error);
+                alert("Error accessing document after ad. Please try again. (Check console for details)");
+            }
+            closeModal('adModal');
+        }
+
+        // Smooth scrolling for navigation links (remains same)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
     </script>
 </body>
 </html>

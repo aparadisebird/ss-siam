@@ -255,6 +255,7 @@
         const storage = app.storage();
 
         // --- View Count Increment Function ---
+        // This function will be called from blog-post-detail.html
         async function recordView(postId) {
             console.log(`Attempting to record view for post ID: ${postId}`);
             try {
@@ -268,10 +269,36 @@
             }
         }
 
+        // Increment Like count for a blog post
+        async function incrementLike(postId) {
+            try {
+                const postRef = db.collection('blogPosts').doc(postId);
+                await postRef.update({
+                    likes: firebase.firestore.FieldValue.increment(1)
+                });
+                console.log(`Liked post ${postId}`);
+            } catch (error) {
+                console.error("Error liking post:", error);
+            }
+        }
+
+        // Increment Dislike count for a blog post
+        async function incrementDislike(postId) {
+            try {
+                const postRef = db.collection('blogPosts').doc(postId);
+                await postRef.update({
+                    dislikes: firebase.firestore.FieldValue.increment(1)
+                });
+                console.log(`Disliked post ${postId}`);
+            } catch (error) {
+                console.error("Error disliking post:", error);
+            }
+        }
+
         // --- Load Blog Post from Firestore (for detail page) ---
         async function loadBlogPost() {
             console.log("loadBlogPost function started.");
-            const postSlug = getQueryParam('slug'); // Get the slug from the URL
+            const postSlug = getQueryParam('slug');
             const blogPostContentDiv = document.getElementById('blogPostContent');
             const pageTitle = document.getElementById('pageTitle');
 
@@ -284,7 +311,6 @@
             console.log(`Attempting to load post with slug: ${postSlug}`);
 
             try {
-                // Query Firestore to find the document with the matching slug
                 const snapshot = await db.collection('blogPosts').where('slug', '==', postSlug).limit(1).get();
                 console.log("Firestore query executed.");
 
@@ -298,40 +324,59 @@
                     return;
                 }
 
-                const doc = snapshot.docs[0]; // Get the first (and only) matching document
+                const doc = snapshot.docs[0];
                 const post = doc.data();
-                const postId = doc.id; // Get the ID for view count
+                const postId = doc.id;
 
                 console.log("Blog post data loaded:", post);
 
-                // Format date for display
                 const postDate = new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
-                // Populate the page with blog post data
                 blogPostContentDiv.innerHTML = `
                     <div class="mb-8">
                         <img src="${post.imageUrl || 'https://placehold.co/800x400/9ca3af/ffffff?text=Blog+Image'}" alt="${post.title}" class="w-full h-auto max-h-96 object-cover rounded-lg mb-6 shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/800x400/9ca3af/ffffff?text=Image+Missing';">
                         <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">${post.title}</h1>
-                        <p class="text-lg text-gray-600 mb-6">By ${post.author} on ${postDate}</p>
-                    </div>
-                    <div class="prose max-w-none text-gray-800 leading-relaxed text-lg">
-                        ${post.content}
-                        <!-- TinyMCE content is raw HTML, so insert it directly. -->
-                    </div>
-                    <div class="mt-10 pt-6 border-t border-gray-200">
-                        <a href="index.html#blog" class="inline-block bg-indigo-600 text-white hover:bg-indigo-700 px-6 py-3 rounded-md text-base font-semibold shadow-md transition duration-300">
-                            &larr; Back to all Blogs
-                        </a>
+                        
+                        <!-- Author, Date, and Interaction Counts -->
+                        <div class="flex items-center text-lg text-gray-600 mb-6 flex-wrap">
+                            <img src="https://i.postimg.cc/3NjnNC0N/IMG-20250112-145354-650.webp" alt="Author Photo" class="w-8 h-8 rounded-full object-cover mr-2 border border-gray-300">
+                            By <a href="index.html#about" class="text-indigo-600 hover:underline ml-1 font-semibold">${post.author}</a> 
+                            <span class="mx-2">&bull;</span> ${postDate}
+                            
+                            <span class="flex items-center ml-4 space-x-3">
+                                <button onclick="incrementLike('${postId}')" class="flex items-center text-green-600 hover:text-green-700 transition duration-200">
+                                    <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3c-.2-.2-.5-.3-.8-.3s-.6.1-.8.3L12 7.7l-1.1-1.1c-.2-.2-.5-.3-.8-.3s-.6.1-.8.3c-.4.4-.4 1 0 1.4l1.1 1.1L12 11.7l2.8-2.8c.4-.4.4-1 0-1.4zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+                                    <span id="likesCount">${post.likes || 0}</span>
+                                </button>
+                                <button onclick="incrementDislike('${postId}')" class="flex items-center text-red-600 hover:text-red-700 transition duration-200">
+                                    <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16.3c-.2-.2-.5-.3-.8-.3s-.6.1-.8.3l-1.1 1.1c-.2.2-.3.5-.3.8s.1.6.3.8c.4.4 1 .4 1.4 0L12 14.3l1.1 1.1c.2.2.5.3.8.3s.6-.1.8-.3c.4-.4.4-1 0-1.4L12 10.3l-2.8 2.8c-.4.4-.4 1 0 1.4zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+                                    <span id="dislikesCount">${post.dislikes || 0}</span>
+                                </button>
+                                <div class="flex items-center ml-2">
+                                    <svg class="w-5 h-5 mr-1 text-gray-500" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                                    <span id="viewsCount">${post.views || 0} Views</span>
+                                </div>
+                            </span>
+                        </div>
+                        
+                        <div class="prose max-w-none text-gray-800 leading-relaxed text-lg">
+                            ${post.content}
+                        </div>
+                        <div class="mt-10 pt-6 border-t border-gray-200">
+                            <a href="index.html#blog" class="inline-block bg-indigo-600 text-white hover:bg-indigo-700 px-6 py-3 rounded-md text-base font-semibold shadow-md transition duration-300">
+                                &larr; Back to all Blogs
+                            </a>
+                        </div>
                     </div>
                 `;
-                pageTitle.textContent = `${post.title} - Siam's Insight`; // Update browser tab title
+                pageTitle.textContent = `${post.title} - Siam's Insight`;
 
                 // Record the view after the post has successfully loaded
                 recordView(postId);
 
             } catch (error) {
                 console.error("Error loading blog post (catch block):", error);
-                blogPostContentDiv.innerHTML = `<h2 class="text-2xl font-bold text-red-600 text-center">Error loading blog post.</h2><p class="text-center text-gray-600 mt-4">Details: ${error.message}. Please try again later.</p>`;
+                blogPostContentDiv.innerHTML = `<h2 class="text-2xl font-bold text-red-600 text-center">Error loading blog post.</h2><p class="text-center text-gray-600 mt-4">Details: ${error.message}. Please try again later. Ensure a Firestore index exists for 'slug' field on 'blogPosts' collection.</p>`;
                 pageTitle.textContent = 'Error - Siam\'s Insight';
             }
         }

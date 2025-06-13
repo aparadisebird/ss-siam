@@ -254,19 +254,32 @@
         const auth = app.auth();
         const storage = app.storage();
 
-        // --- View Count Increment Function ---
-        // This function will be called from blog-post-detail.html
-        async function recordView(postId) {
-            console.log(`Attempting to record view for post ID: ${postId}`);
-            try {
-                const postRef = db.collection('blogPosts').doc(postId);
-                await postRef.update({
-                    views: firebase.firestore.FieldValue.increment(1)
-                });
-                console.log(`View recorded for post ${postId}`);
-            } catch (error) {
-                console.error("Error recording view:", error);
+        // --- Functions for Frontend Dynamic Content ---
+        const blogPostsGrid = document.getElementById('blogPostsGrid');
+        const premiumDocumentsGrid = document.getElementById('premiumDocumentsGrid');
+
+        // Function to truncate HTML content
+        function truncateHtml(html, maxLength) {
+            if (!html) return '';
+
+            // Create a temporary div to parse the HTML and get plain text
+            const div = document.createElement('div');
+            div.innerHTML = html;
+            let text = div.textContent || div.innerText || '';
+
+            if (text.length <= maxLength) {
+                return html; // Return full HTML if it's already short enough
             }
+
+            let truncatedText = text.substring(0, maxLength);
+
+            // Find the last complete word to avoid cutting words in half
+            const lastSpace = truncatedText.lastIndexOf(' ');
+            if (lastSpace > -1) {
+                truncatedText = truncatedText.substring(0, lastSpace);
+            }
+
+            return truncatedText + '...'; // Add ellipsis
         }
 
         // Increment Like count for a blog post
@@ -360,7 +373,7 @@
             }
         }
 
-        // Load Premium Documents (Remains the same as previous update)
+        // Load Premium Documents from Firestore
         async function loadPremiumDocuments() {
             premiumDocumentsGrid.innerHTML = '<p class="text-gray-600 text-center col-span-full">Loading premium documents...</p>';
             try {

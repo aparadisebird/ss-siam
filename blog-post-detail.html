@@ -213,7 +213,7 @@
         const blogPostsGrid = document.getElementById('blogPostsGrid');
         const premiumDocumentsGrid = document.getElementById('premiumDocumentsGrid');
 
-        // Function to truncate HTML content (remains same)
+        // Function to truncate HTML content
         function truncateHtml(html, maxLength) {
             if (!html) return '';
 
@@ -223,18 +223,18 @@
             let text = div.textContent || div.innerText || '';
 
             if (text.length <= maxLength) {
-                return html;
+                return html; // Return full HTML if it's already short enough
             }
 
             let truncatedText = text.substring(0, maxLength);
 
-            // Find the last complete word
+            // Find the last complete word to avoid cutting words in half
             const lastSpace = truncatedText.lastIndexOf(' ');
             if (lastSpace > -1) {
                 truncatedText = truncatedText.substring(0, lastSpace);
             }
 
-            return truncatedText + '...';
+            return truncatedText + '...'; // Add ellipsis
         }
 
         // Increment Like count for a blog post
@@ -245,7 +245,8 @@
                     likes: firebase.firestore.FieldValue.increment(1)
                 });
                 console.log(`Liked post ${postId}`);
-                // Optional: Reload specific card or update count in UI directly if real-time listener isn't on
+                // No need to reload specific card if real-time listener is active on blogPostsGrid (but it's not currently, only on admin)
+                // For live update on homepage, you would need to implement an onSnapshot listener here for 'blogPosts'
             } catch (error) {
                 console.error("Error liking post:", error);
             }
@@ -259,7 +260,6 @@
                     dislikes: firebase.firestore.FieldValue.increment(1)
                 });
                 console.log(`Disliked post ${postId}`);
-                // Optional: Reload specific card or update count in UI directly if real-time listener isn't on
             } catch (error) {
                 console.error("Error disliking post:", error);
             }
@@ -269,6 +269,7 @@
         async function loadBlogPosts() {
             blogPostsGrid.innerHTML = '<p class="text-gray-600 text-center col-span-full">Loading blog posts...</p>';
             try {
+                // Fetch posts, ordered by date descending
                 const snapshot = await db.collection('blogPosts').orderBy('date', 'desc').get();
                 blogPostsGrid.innerHTML = '';
 
@@ -282,6 +283,7 @@
                     const postId = doc.id; // Get the document ID for interaction
                     const postDate = new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
                     
+                    // Truncate the content for display in the card (using JS truncation)
                     const truncatedContent = truncateHtml(post.content, 200); // Adjust 200 for desired preview length
 
                     const postElement = `

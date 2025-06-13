@@ -184,7 +184,7 @@
         </div>
     </section>
 
-    <!-- NEWSLETTER SECTION - New Section -->
+    <!-- NEWSLETTER SECTION -->
     <section id="newsletter" class="bg-slate-800 rounded-xl p-12 text-center my-24 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
         <div class="bg-slate-800/80 backdrop-blur-sm p-8 rounded-lg">
             <h2 class="text-4xl font-bold text-white mb-3">Join the Newsletter</h2>
@@ -197,7 +197,7 @@
         </div>
     </section>
 
-    <!-- FOOTER SECTION - Redesigned (Same as previous update) -->
+    <!-- FOOTER SECTION - Redesigned -->
     <footer class="bg-slate-900 text-slate-400">
         <div class="container mx-auto px-6 pt-16 pb-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -509,7 +509,59 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadBlogPosts();
             loadPremiumDocuments();
+            // Attach newsletter form listener
+            const newsletterForm = document.getElementById('newsletter-form');
+            if (newsletterForm) {
+                newsletterForm.addEventListener('submit', subscribeToNewsletter);
+            }
         });
+
+        // Newsletter Subscription Function
+        async function subscribeToNewsletter(event) {
+            event.preventDefault(); // Prevent default form submission and page reload
+            const emailInput = document.getElementById('newsletter-email');
+            const messageElement = document.getElementById('newsletter-message');
+            const email = emailInput.value.trim();
+
+            messageElement.textContent = 'Subscribing...';
+            messageElement.classList.remove('text-red-300', 'text-emerald-300'); // Clear previous colors
+            messageElement.classList.add('text-slate-300');
+
+            if (!email) {
+                messageElement.textContent = 'Please enter your email address.';
+                messageElement.classList.add('text-red-300');
+                return;
+            }
+
+            try {
+                // Check if email already exists
+                const existingSubscriber = await db.collection('newsletterSubscribers').doc(email).get();
+                if (existingSubscriber.exists) {
+                    messageElement.textContent = 'Email already subscribed! Thank you for your continued support!';
+                    messageElement.classList.add('text-emerald-300');
+                    return;
+                }
+
+                // Sign in anonymously if not already authenticated (to satisfy Firestore rules)
+                await auth.signInAnonymously();
+
+                // Save email to Firestore using email as document ID
+                await db.collection('newsletterSubscribers').doc(email).set({
+                    email: email,
+                    subscribedAt: new Date().toISOString()
+                });
+
+                emailInput.value = ''; // Clear the input field
+                messageElement.textContent = 'Thank you for subscribing! I will keep you updated with the latest insights. Sincerely, Shifat Shahriar Siam';
+                messageElement.classList.remove('text-slate-300');
+                messageElement.classList.add('text-emerald-300');
+            } catch (error) {
+                console.error("Error subscribing to newsletter:", error);
+                messageElement.textContent = `Subscription failed: ${error.message}. Please try again.`;
+                messageElement.classList.remove('text-slate-300');
+                messageElement.classList.add('text-red-300');
+            }
+        }
 
         // Function to show a modal (remains same)
         function showModal(modalId) {

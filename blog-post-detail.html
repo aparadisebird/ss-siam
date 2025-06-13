@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="pageTitle">Loading Blog Post...</title>
-    <!-- Load Tailwind CSS from CDN -->
+    <!-- Load Tailwind CSS from CDN (Tailwind warning is expected in console for CDN usage) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Load Inter font from Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -30,26 +30,71 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
-        /* Basic styling for content within the blog post */
+        /* Basic styling for content within the blog post - for TinyMCE rendered HTML */
+        .prose {
+            /* Basic resets to make TinyMCE output look good with Tailwind */
+            max-width: none; /* Override default prose max-width if present */
+            color: #333;
+            line-height: 1.7;
+        }
         .prose p {
             margin-bottom: 1em;
         }
         .prose ul, .prose ol {
             margin-bottom: 1em;
-            padding-left: 1.5em;
+            padding-left: 1.5em; /* Default list indent */
+            list-style-type: disc; /* Default bullet style for ul */
+        }
+        .prose ol {
+            list-style-type: decimal; /* Default number style for ol */
         }
         .prose li {
             margin-bottom: 0.5em;
         }
-        .prose h1, .prose h2, .prose h3, .prose h4 {
+        .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
             margin-top: 1.5em;
             margin-bottom: 0.75em;
             font-weight: bold;
+            color: #1a202c; /* Darker heading color */
         }
-        .prose h1 { font-size: 2.25em; }
-        .prose h2 { font-size: 1.75em; }
-        .prose h3 { font-size: 1.5em; }
-        .prose h4 { font-size: 1.25em; }
+        .prose h1 { font-size: 2.25em; } /* 36px */
+        .prose h2 { font-size: 1.75em; } /* 28px */
+        .prose h3 { font-size: 1.5em; } /* 24px */
+        .prose h4 { font-size: 1.25em; } /* 20px */
+        .prose a {
+            color: #4c51bf; /* Indigo for links */
+            text-decoration: underline;
+        }
+        .prose img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem; /* rounded-lg */
+            margin-top: 1em;
+            margin-bottom: 1em;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        /* Add other styles for elements TinyMCE might output, like strong, em, table, etc. */
+        .prose strong { font-weight: bold; }
+        .prose em { font-style: italic; }
+        .prose table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1em;
+        }
+        .prose th, .prose td {
+            border: 1px solid #e2e8f0; /* gray-300 */
+            padding: 0.5em;
+            text-align: left;
+        }
+        .prose blockquote {
+            border-left: 4px solid #4c51bf; /* Indigo border */
+            padding-left: 1em;
+            margin-left: 0;
+            font-style: italic;
+            color: #4a5568; /* gray-600 */
+        }
     </style>
 </head>
 <body>

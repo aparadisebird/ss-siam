@@ -213,7 +213,7 @@
         const blogPostsGrid = document.getElementById('blogPostsGrid');
         const premiumDocumentsGrid = document.getElementById('premiumDocumentsGrid');
 
-        // Function to truncate HTML content
+        // Function to truncate HTML content (remains same)
         function truncateHtml(html, maxLength) {
             if (!html) return '';
 
@@ -269,7 +269,6 @@
         async function loadBlogPosts() {
             blogPostsGrid.innerHTML = '<p class="text-gray-600 text-center col-span-full">Loading blog posts...</p>';
             try {
-                // Fetch posts, ordered by date descending
                 const snapshot = await db.collection('blogPosts').orderBy('date', 'desc').get();
                 blogPostsGrid.innerHTML = '';
 
@@ -283,7 +282,6 @@
                     const postId = doc.id; // Get the document ID for interaction
                     const postDate = new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
                     
-                    // Truncate the content for display in the card (using JS truncation)
                     const truncatedContent = truncateHtml(post.content, 200); // Adjust 200 for desired preview length
 
                     const postElement = `

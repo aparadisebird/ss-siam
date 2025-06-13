@@ -277,6 +277,8 @@
                     likes: firebase.firestore.FieldValue.increment(1)
                 });
                 console.log(`Liked post ${postId}`);
+                // No need to reload specific card if real-time listener is active on blogPostsGrid (but it's not currently, only on admin)
+                // For live update on homepage, you would need to implement an onSnapshot listener here for 'blogPosts'
             } catch (error) {
                 console.error("Error liking post:", error);
             }
@@ -345,11 +347,11 @@
                             
                             <span class="flex items-center ml-4 space-x-3">
                                 <button onclick="incrementLike('${postId}')" class="flex items-center text-green-600 hover:text-green-700 transition duration-200">
-                                    <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3c-.2-.2-.5-.3-.8-.3s-.6.1-.8.3L12 7.7l-1.1-1.1c-.2-.2-.5-.3-.8-.3s-.6.1-.8.3c-.4.4-.4 1 0 1.4l1.1 1.1L12 11.7l2.8-2.8c.4-.4.4-1 0-1.4zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+                                    <svg class="w-5 h-5 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thumbs-up"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
                                     <span id="likesCount">${post.likes || 0}</span>
                                 </button>
                                 <button onclick="incrementDislike('${postId}')" class="flex items-center text-red-600 hover:text-red-700 transition duration-200">
-                                    <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16.3c-.2-.2-.5-.3-.8-.3s-.6.1-.8.3l-1.1 1.1c-.2.2-.3.5-.3.8s.1.6.3.8c.4.4 1 .4 1.4 0L12 14.3l1.1 1.1c.2.2.5.3.8.3s.6-.1.8-.3c.4-.4.4-1 0-1.4L12 10.3l-2.8 2.8c-.4.4-.4 1 0 1.4zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+                                    <svg class="w-5 h-5 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thumbs-down"><path d="M10 15V19a3 3 0 0 0 3 3l4-9V3H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zM17 2H20a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"></path></svg>
                                     <span id="dislikesCount">${post.dislikes || 0}</span>
                                 </button>
                                 <div class="flex items-center ml-2">
@@ -373,6 +375,11 @@
 
                 // Record the view after the post has successfully loaded
                 recordView(postId);
+
+                // Optional: Update counts on the fly without full page reload if the user clicks like/dislike
+                // For this, you'd need to create event listeners for the new buttons within loadBlogPost
+                // and fetch the updated counts. For simplicity and to avoid complexity,
+                // we'll leave it to the next page load for updates after an interaction.
 
             } catch (error) {
                 console.error("Error loading blog post (catch block):", error);

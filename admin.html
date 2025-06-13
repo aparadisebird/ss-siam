@@ -131,11 +131,11 @@
         <!-- Main Admin Dashboard (Hidden until login) -->
         <section id="adminDashboard" class="hidden flex flex-1">
             <!-- Sidebar Navigation -->
-            <aside id="sidebar" class="sidebar bg-indigo-700 p-6 shadow-xl relative min-h-full"> <!-- min-h-full to ensure it stretches -->
+            <aside id="sidebar" class="sidebar bg-indigo-700 p-6 shadow-xl relative min-h-full">
                 <button id="sidebarToggle" class="sidebar-toggle-button">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg>
                 </button>
-                <nav class="mt-10"> <!-- Adjusted margin-top to account for toggle button -->
+                <nav class="mt-10">
                     <ul class="space-y-4">
                         <li>
                             <button type="button" data-section-target="blog-management" class="sidebar-nav-item active">
@@ -191,10 +191,7 @@
                             <label for="blogAuthor" class="block text-gray-700 text-sm font-bold mb-2">Author</label>
                             <input type="text" id="blogAuthor" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md" value="Shifat Siam">
                         </div>
-                        <div class="mb-4">
-                            <label for="blogReadTime" class="block text-gray-700 text-sm font-bold mb-2">Read Time (e.g., 5 min)</label>
-                            <input type="text" id="blogReadTime" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
-                        </div>
+                        <!-- Removed Read Time Input -->
                         <div class="mb-6">
                             <label for="blogImageUrl" class="block text-gray-700 text-sm font-bold mb-2">Image URL (Placeholder URL or actual image)</label>
                             <input type="url" id="blogImageUrl" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md">
@@ -341,7 +338,7 @@
         const blogSlugInput = document.getElementById('blogSlug');
         const blogContentInput = document.getElementById('blogContent'); // Target TinyMCE
         const blogAuthorInput = document.getElementById('blogAuthor');
-        const blogReadTimeInput = document.getElementById('blogReadTime');
+        // const blogReadTimeInput = document.getElementById('blogReadTime'); // Removed from HTML
         const blogImageUrlInput = document.getElementById('blogImageUrl');
         const saveBlogPostButton = document.getElementById('saveBlogPostButton');
         const cancelEditBlogPostButton = document.getElementById('cancelEditBlogPostButton');
@@ -396,7 +393,7 @@
             if (tinymce.get('blogContent')) {
                 tinymce.get('blogContent').setContent('');
             }
-            blogReadTimeInput.value = '';
+            blogAuthorInput.value = ''; // Cleared read time
             blogImageUrlInput.value = '';
             saveBlogPostButton.textContent = 'Save Blog Post';
             cancelEditBlogPostButton.classList.add('hidden');
@@ -532,7 +529,7 @@
                         <div class="bg-white p-4 rounded-lg shadow-md flex justify-between items-center">
                             <div>
                                 <h5 class="text-xl font-semibold text-gray-800">${post.title}</h5>
-                                <p class="text-gray-600 text-sm">By ${post.author} | ${new Date(post.date).toLocaleDateString()} | ${post.readTime}</p>
+                                <p class="text-gray-600 text-sm">By ${post.author} | ${new Date(post.date).toLocaleDateString()}</p>
                                 <p class="text-gray-500 text-xs mt-1">Slug: <span class="font-mono">${post.slug || 'N/A'}</span></p>
                             </div>
                             <div class="flex space-x-2">
@@ -553,15 +550,15 @@
         saveBlogPostButton.addEventListener('click', async () => {
             const postId = blogPostIdInput.value;
             const title = blogTitleInput.value.trim();
-            let slug = blogSlugInput.value.trim(); // Use let as slug might be updated
+            let slug = blogSlugInput.value.trim();
             // Get content directly from TinyMCE editor instance
             const content = tinymce.get('blogContent').getContent().trim();
             const author = blogAuthorInput.value.trim();
-            const readTime = blogReadTimeInput.value.trim();
+            // Removed readTimeInput.value
             const imageUrl = blogImageUrlInput.value.trim();
 
-            if (!title || !content || !author || !readTime) {
-                showMessage('Please fill in all required blog post fields (Title, Content, Author, Read Time).', 'error');
+            if (!title || !content || !author) { // Removed readTime from required fields
+                showMessage('Please fill in all required blog post fields (Title, Content, Author).', 'error');
                 return;
             }
 
@@ -572,28 +569,34 @@
 
             const blogPostData = {
                 title,
-                slug, // Ensure slug is saved
+                slug,
                 content,
                 author,
-                readTime,
-                imageUrl: imageUrl || 'https://placehold.co/600x400/9ca3af/ffffff?text=Blog+Image', // Default image if none provided
-                date: new Date().toISOString() // Update date on save/edit
+                imageUrl: imageUrl || 'https://placehold.co/600x400/9ca3af/ffffff?text=Blog+Image',
+                date: new Date().toISOString(), // Update date on save/edit
+                likes: 0, // Initialize for new posts
+                dislikes: 0, // Initialize for new posts
+                views: 0 // Initialize for new posts
             };
 
             try {
                 if (postId) {
-                    // Update existing post
-                    await db.collection('blogPosts').doc(postId).update(blogPostData);
+                    // Update existing post - only update fields that were in the form (likes, dislikes, views are updated separately)
+                    const updateData = { ...blogPostData }; // Copy data
+                    delete updateData.likes; // Don't overwrite dynamic counts
+                    delete updateData.dislikes;
+                    delete updateData.views;
+
+                    await db.collection('blogPosts').doc(postId).update(updateData);
                     showMessage('Blog post updated successfully!', 'success');
                 } else {
                     // Add new post
-                    // Optional: Check if slug already exists before adding
                     const existingSlug = await db.collection('blogPosts').where('slug', '==', slug).limit(1).get();
                     if (!existingSlug.empty) {
                         showMessage('A blog post with this slug already exists. Please choose a different slug or edit the existing post.', 'error');
                         return;
                     }
-                    await db.collection('blogPosts').add(blogPostData);
+                    await db.collection('blogPosts').add(blogPostData); // Add new post with initial counts
                     showMessage('New blog post added successfully!', 'success');
                 }
                 clearBlogPostForm();
@@ -612,17 +615,15 @@
                     blogFormTitle.textContent = 'Edit Blog Post';
                     blogPostIdInput.value = postId;
                     blogTitleInput.value = post.title;
-                    blogSlugInput.value = post.slug || ''; // Ensure slug field is populated
-                    // Set content to TinyMCE editor
+                    blogSlugInput.value = post.slug || '';
                     if (tinymce.get('blogContent')) {
                         tinymce.get('blogContent').setContent(post.content);
                     }
                     blogAuthorInput.value = post.author;
-                    blogReadTimeInput.value = post.readTime;
+                    // Removed blogReadTimeInput.value = post.readTime;
                     blogImageUrlInput.value = post.imageUrl;
                     saveBlogPostButton.textContent = 'Update Blog Post';
                     cancelEditBlogPostButton.classList.remove('hidden');
-                    // Scroll to top of form
                     blogFormTitle.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 } else {
                     showMessage('Blog post not found.', 'error');
@@ -633,14 +634,14 @@
             }
         }
 
-        // Cancel Blog Post Edit
+        // Cancel Blog Post Edit (remains same)
         cancelEditBlogPostButton.addEventListener('click', () => {
             clearBlogPostForm();
         });
 
-        // Delete Blog Post
+        // Delete Blog Post (remains same)
         async function deleteBlogPost(postId) {
-            if (confirm('Are you sure you want to delete this blog post?')) { // Using confirm for simplicity, replace with custom modal in production
+            if (confirm('Are you sure you want to delete this blog post?')) {
                 try {
                     await db.collection('blogPosts').doc(postId).delete();
                     showMessage('Blog post deleted successfully!', 'success');
@@ -651,11 +652,10 @@
             }
         }
 
-        // --- Premium Document Management ---
-        // Load Premium Documents (Real-time listener)
+        // --- Premium Document Management (remains same) ---
         function loadPremiumDocuments() {
             db.collection('premiumDocuments').onSnapshot(snapshot => {
-                premiumDocumentsList.innerHTML = ''; // Clear current list
+                premiumDocumentsList.innerHTML = '';
                 if (snapshot.empty) {
                     premiumDocumentsList.innerHTML = '<p class="text-gray-600 text-center">No premium documents found.</p>';
                     return;
@@ -685,7 +685,6 @@
             });
         }
 
-        // Save Premium Document
         saveDocButton.addEventListener('click', async () => {
             const docId = docIdInput.value;
             const name = docNameInput.value.trim();
@@ -694,8 +693,8 @@
             const pages = parseInt(docPagesInput.value);
             const previewImageUrl = docPreviewImageUrlInput.value.trim();
             const externalDownloadUrl = docExternalDownloadUrlInput.value.trim();
-            const allowBkash = allowBkashCheckbox.checked; // Get checkbox value
-            const allowAd = allowAdCheckbox.checked; // Get checkbox value
+            const allowBkash = allowBkashCheckbox.checked;
+            const allowAd = allowAdCheckbox.checked;
 
             if (!name || !description || isNaN(priceBDT) || isNaN(pages) || !previewImageUrl) {
                 showMessage('Please fill in all required document fields and ensure price/pages are numbers.', 'error');
@@ -709,17 +708,15 @@
                 pages,
                 previewImageUrl,
                 externalDownloadUrl: externalDownloadUrl || '',
-                allowBkash: allowBkash, // Save checkbox value
-                allowAd: allowAd // Save checkbox value
+                allowBkash: allowBkash,
+                allowAd: allowAd
             };
 
             try {
                 if (docId) {
-                    // Update existing document
                     await db.collection('premiumDocuments').doc(docId).update(documentData);
                     showMessage('Premium document updated successfully!', 'success');
                 } else {
-                    // Add new document
                     await db.collection('premiumDocuments').add(documentData);
                     showMessage('New premium document added successfully!', 'success');
                 }
@@ -730,7 +727,6 @@
             }
         });
 
-        // Edit Premium Document
         async function editDocument(docId) {
             try {
                 const doc = await db.collection('premiumDocuments').doc(docId).get();
@@ -744,11 +740,10 @@
                     docPagesInput.value = document.pages;
                     docPreviewImageUrlInput.value = document.previewImageUrl;
                     docExternalDownloadUrlInput.value = document.externalDownloadUrl || '';
-                    allowBkashCheckbox.checked = !!document.allowBkash; // Set checkbox based on stored value
-                    allowAdCheckbox.checked = !!document.allowAd; // Set checkbox based on stored value
+                    allowBkashCheckbox.checked = !!document.allowBkash;
+                    allowAdCheckbox.checked = !!document.allowAd;
                     saveDocButton.textContent = 'Update Document';
                     cancelEditDocButton.classList.remove('hidden');
-                    // Scroll to top of form
                     docFormTitle.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 } else {
                     showMessage('Document not found.', 'error');
@@ -759,14 +754,14 @@
             }
         }
 
-        // Cancel Document Edit
+        // Cancel Document Edit (remains same)
         cancelEditDocButton.addEventListener('click', () => {
             clearDocForm();
         });
 
-        // Delete Premium Document
+        // Delete Premium Document (remains same)
         async function deleteDocument(docId) {
-            if (confirm('Are you sure you want to delete this premium document?')) { // Using confirm for simplicity, replace with custom modal in production
+            if (confirm('Are you sure you want to delete this premium document?')) {
                 try {
                     await db.collection('premiumDocuments').doc(docId).delete();
                     showMessage('Premium document deleted successfully!', 'success');
@@ -777,12 +772,10 @@
             }
         }
 
-        // --- Purchase Request Management (Bkash) ---
-        // Load Purchase Requests (Real-time listener)
+        // --- Purchase Request Management (remains same) ---
         function loadPurchaseRequests() {
-            // Added more specific error logging for debugging
             db.collection('bkashOrders').orderBy('status').orderBy('orderDate', 'desc').onSnapshot(snapshot => {
-                purchaseRequestsList.innerHTML = ''; // Clear current list
+                purchaseRequestsList.innerHTML = '';
                 if (snapshot.empty) {
                     purchaseRequestsList.innerHTML = '<p class="text-gray-600 text-center">No purchase requests found.</p>';
                     return;
@@ -826,19 +819,17 @@
                     purchaseRequestsList.innerHTML += orderElement;
                 });
             }, error => {
-                // IMPORTANT: Log the actual error code and message here!
                 console.error("Error loading purchase requests. Error code:", error.code, "Message:", error.message, error);
                 showMessage(`Error loading purchase requests: ${error.message}`, 'error');
             });
         }
 
-        // Approve Order
+        // Approve Order (remains same)
         async function approveOrder(orderId, downloadLink) {
             if (!downloadLink.trim()) {
                 showMessage('Please provide a download link before approving.', 'error');
                 return;
             }
-            // Optional: Confirm with the user if the link is correct
             if (confirm('Approve order ' + orderId + ' and record this link: ' + downloadLink + '? Remember to manually send the email to the buyer.')) {
                 try {
                     await db.collection('bkashOrders').doc(orderId).update({
@@ -854,7 +845,7 @@
             }
         }
 
-        // Reject Order
+        // Reject Order (remains same)
         async function rejectOrder(orderId) {
             if (confirm('Are you sure you want to reject this order?')) {
                 try {
@@ -864,7 +855,7 @@
                     });
                     showMessage('Order rejected successfully!', 'success');
                 } catch (error) {
-                        console.error("Error rejecting order:", error);
+                    console.error("Error rejecting order:", error);
                     showMessage('Error rejecting order.', 'error');
                 }
             }

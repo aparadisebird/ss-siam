@@ -230,8 +230,8 @@
             <p>&copy; 2025 Shifat Shahriar Siam. All Rights Reserved.</p>
         </div>
     </footer>
-    <!-- Modals for Bkash Payment and Ad Watching (Placeholders) -->
-    <div id="bkashModal" class="fixed inset-0 bg-black bg-opacity50 flex items-center justify-center p-4 hidden">
+    <!-- Modals for Bkash Payment and Ad Watching (Remains the same) -->
+    <div id="bkashModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
             <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Purchase <span id="bkashDocTitle" class="text-indigo-600"></span> via Bkash</h3>
             <p class="text-gray-700 mb-4">
@@ -311,7 +311,7 @@
         const blogPostsGrid = document.getElementById('blogPostsGrid');
         const premiumDocumentsGrid = document.getElementById('premiumDocumentsGrid');
 
-        // Function to truncate HTML content
+        // Function to truncate HTML content (remains same)
         function truncateHtml(html, maxLength) {
             if (!html) return '';
 
@@ -324,10 +324,9 @@
                 return html; // Return full HTML if it's already short enough
             }
 
-            // Simple truncation by character count
             let truncatedText = text.substring(0, maxLength);
 
-            // Find the last complete word
+            // Find the last complete word to avoid cutting words in half
             const lastSpace = truncatedText.lastIndexOf(' ');
             if (lastSpace > -1) {
                 truncatedText = truncatedText.substring(0, lastSpace);
@@ -344,6 +343,8 @@
                     likes: firebase.firestore.FieldValue.increment(1)
                 });
                 console.log(`Liked post ${postId}`);
+                // No need to reload specific card if real-time listener is active on blogPostsGrid (but it's not currently, only on admin)
+                // For live update on homepage, you would need to implement an onSnapshot listener here for 'blogPosts'
             } catch (error) {
                 console.error("Error liking post:", error);
             }
@@ -364,11 +365,10 @@
 
         // Load Blog Posts from Firestore
         async function loadBlogPosts() {
-            blogPostsGrid.innerHTML = '<p class="text-gray-600 text-center col-span-full">Loading blog posts...</p>'; // Show loading message
+            blogPostsGrid.innerHTML = '<p class="text-gray-600 text-center col-span-full">Loading blog posts...</p>';
             try {
-                // Fetch posts, ordered by date descending
                 const snapshot = await db.collection('blogPosts').orderBy('date', 'desc').get();
-                blogPostsGrid.innerHTML = ''; // Clear loading message
+                blogPostsGrid.innerHTML = '';
 
                 if (snapshot.empty) {
                     blogPostsGrid.innerHTML = '<p class="text-gray-600 text-center col-span-full">No blog posts published yet.</p>';
@@ -378,26 +378,22 @@
                 snapshot.forEach(doc => {
                     const post = doc.data();
                     const postId = doc.id; // Get the document ID for interaction
-                    const postDate = new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); // Format date
+                    const postDate = new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
                     
-                    // Truncate the content for display in the card
-                    const truncatedContent = truncateHtml(post.content, 200); // Adjust 200 to your desired character limit
+                    const truncatedContent = truncateHtml(post.content, 200); // Adjust 200 for desired preview length
 
                     const postElement = `
                         <article class="bg-gray-50 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
                             <img src="${post.imageUrl || 'https://placehold.co/600x400/9ca3af/ffffff?text=Blog+Image'}" alt="${post.title}" class="w-full h-48 object-cover rounded-t-lg" onerror="this.onerror=null;this.src='https://placehold.co/600x400/9ca3af/ffffff?text=Image+Missing';">
                             <div class="p-6">
-                                <!-- Link the title to the detail page -->
                                 <a href="blog-post-detail.html?slug=${post.slug}" class="block">
                                     <h3 class="text-2xl font-semibold text-gray-900 mb-3 hover:text-indigo-700 transition duration-300">${post.title}</h3>
                                 </a>
-                                <!-- Display truncated content -->
                                 <p class="text-gray-700 mb-4">${truncatedContent}</p>
                                 <div class="flex justify-between items-center text-sm text-gray-500 mb-4">
-                                    <span>By <a href="#about" class="text-indigo-600 hover:underline">${post.author}</a></span>
+                                    <span>By <a href="index.html#about" class="text-indigo-600 hover:underline">${post.author}</a></span>
                                     <span>${postDate}</span>
                                 </div>
-                                <!-- Explicit "Read More" link -->
                                 <a href="blog-post-detail.html?slug=${post.slug}" class="text-indigo-600 hover:text-indigo-800 font-semibold flex items-center mb-4">
                                     Read More
                                     <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
@@ -406,11 +402,11 @@
                                 <div class="flex items-center justify-between text-sm text-gray-600 mt-4 pt-4 border-t border-gray-200">
                                     <div class="flex items-center space-x-3">
                                         <button onclick="incrementLike('${postId}')" class="flex items-center text-green-600 hover:text-green-700 transition duration-200">
-                                            <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3c-.2-.2-.5-.3-.8-.3s-.6.1-.8.3L12 7.7l-1.1-1.1c-.2-.2-.5-.3-.8-.3s-.6.1-.8.3c-.4.4-.4 1 0 1.4l1.1 1.1L12 11.7l2.8-2.8c.4-.4.4-1 0-1.4zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+                                            <svg class="w-5 h-5 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thumbs-up"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
                                             <span>${post.likes || 0}</span>
                                         </button>
                                         <button onclick="incrementDislike('${postId}')" class="flex items-center text-red-600 hover:text-red-700 transition duration-200">
-                                            <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16.3c-.2-.2-.5-.3-.8-.3s-.6.1-.8.3l-1.1 1.1c-.2.2-.3.5-.3.8s.1.6.3.8c.4.4 1 .4 1.4 0L12 14.3l1.1 1.1c.2.2.5.3.8.3s.6-.1.8-.3c.4-.4.4-1 0-1.4L12 10.3l-2.8 2.8c-.4.4-.4 1 0 1.4zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+                                            <svg class="w-5 h-5 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-thumbs-down"><path d="M10 15V19a3 3 0 0 0 3 3l4-9V3H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zM17 2H20a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"></path></svg>
                                             <span>${post.dislikes || 0}</span>
                                         </button>
                                     </div>
@@ -432,10 +428,10 @@
 
         // Load Premium Documents (Remains the same as previous update)
         async function loadPremiumDocuments() {
-            premiumDocumentsGrid.innerHTML = '<p class="text-gray-600 text-center col-span-full">Loading premium documents...</p>'; // Show loading message
+            premiumDocumentsGrid.innerHTML = '<p class="text-gray-600 text-center col-span-full">Loading premium documents...</p>';
             try {
                 const snapshot = await db.collection('premiumDocuments').get();
-                premiumDocumentsGrid.innerHTML = ''; // Clear loading message
+                premiumDocumentsGrid.innerHTML = '';
 
                 if (snapshot.empty) {
                     premiumDocumentsGrid.innerHTML = '<p class="text-gray-600 text-center col-span-full">No premium documents available yet.</p>';
@@ -446,9 +442,8 @@
                     const document = doc.data();
                     let buttonsHtml = '';
 
-                    // Explicitly check for boolean true values, handling undefined/null as false
-                    const allowBkash = !!document.allowBkash; // Convert to true/false
-                    const allowAd = !!document.allowAd; // Convert to true/false
+                    const allowBkash = !!document.allowBkash;
+                    const allowAd = !!document.allowAd;
 
                     if (allowBkash) {
                         buttonsHtml += `
@@ -464,7 +459,6 @@
                             </button>
                         `;
                     }
-                    // If neither option is allowed, display a message
                     if (!allowBkash && !allowAd) {
                         buttonsHtml = '<p class="text-gray-500 text-center text-sm">Access options not available for this document.</p>';
                     }
@@ -501,23 +495,23 @@
             loadPremiumDocuments();
         });
 
-        // Function to show a modal
+        // Function to show a modal (remains same)
         function showModal(modalId) {
             document.getElementById(modalId).classList.remove('hidden');
         }
 
-        // Function to close a modal
+        // Function to close a modal (remains same)
         function closeModal(modalId) {
             document.getElementById(modalId).classList.add('hidden');
         }
 
-        // Show Bkash payment modal
+        // Show Bkash payment modal (remains same)
         function showBkashPaymentModal(docTitle) {
             document.getElementById('bkashDocTitle').textContent = docTitle;
             showModal('bkashModal');
         }
 
-        // Function to submit Bkash order to Firestore
+        // Function to submit Bkash order to Firestore (remains same)
         async function submitBkashOrder() {
             const docTitle = document.getElementById('bkashDocTitle').textContent;
             const buyerName = document.getElementById('buyerNameBkash').value;
@@ -525,7 +519,7 @@
             const trxId = document.getElementById('trxId').value;
 
             if (!buyerName || !buyerEmail || !trxId) {
-                alert('Please fill in all fields.'); // Using alert for demo, replace with custom modal
+                alert('Please fill in all fields.');
                 return;
             }
 
@@ -536,89 +530,75 @@
                 console.log("Signed in anonymously with UID:", userId);
             } catch (error) {
                 console.error("Authentication error during order:", error);
-                alert("Authentication error during order. Please try again. (Check console for details)"); // More specific error
+                alert("Authentication error during order. Please try again. (Check console for details)");
                 return;
             }
 
-            // --- Fetch document details to get URL ---
             let documentData = null;
             let documentFirestoreId = null;
             try {
-                // Find the document in premiumDocuments collection by name
-                // IMPORTANT: Ensure an index exists for 'name' field in premiumDocuments if this query fails
                 const docSnapshot = await db.collection('premiumDocuments').where('name', '==', docTitle).limit(1).get();
                 if (!docSnapshot.empty) {
                     documentData = docSnapshot.docs[0].data();
                     documentFirestoreId = docSnapshot.docs[0].id;
                 } else {
-                    alert('Error: Document details not found for purchase. Please contact support.'); // More specific error
+                    alert('Error: Document details not found for purchase. Please contact support.');
                     console.error('Premium document not found in Firestore for title:', docTitle);
                     return;
                 }
             } catch (error) {
                 console.error("Error fetching document details for order:", error);
-                alert("Error fetching document details for purchase. Please try again. (Check console for details)"); // More specific error
+                alert("Error fetching document details for purchase. Please try again. (Check console for details)");
                 return;
             }
-            // --- End Fetch document details ---
 
-            // Add the order to Firestore
             try {
                 await db.collection('bkashOrders').add({
                     documentName: docTitle,
                     buyerName: buyerName,
                     buyerEmail: buyerEmail,
                     bkashTrxId: trxId,
-                    orderDate: new Date().toISOString(), // Store current date/time
-                    status: 'pending', // Initial status
-                    userId: userId, // Store the anonymous user's UID
-                    documentFirestoreId: documentFirestoreId, // Store the document's Firestore ID
-                    documentUrl: documentData.externalDownloadUrl || '' // Store the external download URL
+                    orderDate: new Date().toISOString(),
+                    status: 'pending',
+                    userId: userId,
+                    documentFirestoreId: documentFirestoreId,
+                    documentUrl: documentData.externalDownloadUrl || ''
                 });
                 alert('Your order has been submitted successfully! You will receive an email upon verification. Thank you!');
                 closeModal('bkashModal');
-                // Clear the form fields after submission
                 document.getElementById('buyerNameBkash').value = '';
                 document.getElementById('buyerEmailBkash').value = '';
                 document.getElementById('trxId').value = '';
             } catch (error) {
-                console.error("Error adding order document to Firestore:", error); // More specific console log
-                alert("There was an error submitting your order. Please try again. (Check console for details)"); // More specific error
+                console.error("Error adding order document to Firestore:", error);
+                alert("There was an error submitting your order. Please try again. (Check console for details)");
             }
         }
 
-        // Show Ad modal
+        // Show Ad modal (remains same, with AdSense integration)
         function showAdModal(docTitle) {
             document.getElementById('adDocTitle').textContent = docTitle;
-            document.getElementById('accessDocButton').classList.add('hidden'); // Hide access button initially
-            document.getElementById('adContainer').innerHTML = '<p class="text-center text-gray-600">Loading advertisement...</p>'; // Reset content
+            document.getElementById('accessDocButton').classList.add('hidden');
+            document.getElementById('adContainer').innerHTML = '<p class="text-center text-gray-600">Loading advertisement...</p>';
 
             showModal('adModal');
 
-            // Inject AdSense Ad Unit
-            // This is the actual AdSense ad unit code. Replace data-ad-slot if you have a different one for rewarded/interstitial.
             const adUnitHtml = `
                 <ins class="adsbygoogle"
                      style="display:block; text-align:center; min-height: 100px; min-width: 100px;"
                      data-ad-client="ca-pub-6894065582382364"
                      data-ad-slot="1570571656"
-                     data-format="auto"
+                     data-ad-format="auto"
                      data-full-width-responsive="true"></ins>
             `;
             document.getElementById('adContainer').innerHTML = adUnitHtml;
 
-            // Important: This pushes the ad unit to be loaded by AdSense's global script.
-            // This is how you programmatically load an AdSense ad unit after it's injected into the DOM.
             if (window.adsbygoogle && window.adsbygoogle.push) {
                 (window.adsbygoogle = window.adsbygoogle || []).push({});
             } else {
                 console.warn("AdSense script not loaded or not ready. Ad might not display.");
             }
 
-
-            // Simulate ad completion after a delay for demonstration purposes.
-            // In a real, secure rewarded ad implementation, you'd rely on AdSense API callbacks
-            // (e.g., ad finished playing) to enable the access button, often with server-side validation.
             setTimeout(() => {
                 document.getElementById('adContainer').innerHTML = `
                     <div class="flex flex-col items-center justify-center p-4">
@@ -627,23 +607,22 @@
                         <p class="text-gray-500 text-sm mt-1">Access button will appear shortly.</p>
                     </div>
                 `;
-                document.getElementById('accessDocButton').classList.remove('hidden'); // Show access button
-            }, 3000); // Simulate 3 seconds ad watch
+                document.getElementById('accessDocButton').classList.remove('hidden');
+            }, 3000);
         }
 
-        // Simulate document access after ad (now attempts to use fetched URL)
+        // Simulate document access after ad (remains same)
         async function accessDocumentAfterAd() {
             const docTitle = document.getElementById('adDocTitle').textContent;
             let documentData = null;
             try {
-                // Find the document in premiumDocuments collection by name
                 const docSnapshot = await db.collection('premiumDocuments').where('name', '==', docTitle).limit(1).get();
                 if (!docSnapshot.empty) {
                     documentData = docSnapshot.docs[0].data();
                     const downloadUrl = documentData.externalDownloadUrl;
                     if (downloadUrl) {
                         alert(`Document "${docTitle}" is now accessible! Opening download link.`);
-                        window.open(downloadUrl, '_blank'); // Open in new tab
+                        window.open(downloadUrl, '_blank');
                     } else {
                         alert(`Document "${docTitle}" is accessible, but no download link found. Please contact support.`);
                         console.error(`Download URL missing for document: ${docTitle}`);
@@ -659,7 +638,7 @@
             closeModal('adModal');
         }
 
-        // Smooth scrolling for navigation links
+        // Smooth scrolling for navigation links (remains same)
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();

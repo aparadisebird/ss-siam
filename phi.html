@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PHI 3207 - Interactive Study Guide</title>
     <!-- Chosen Palette: Calm Harmony (Light Slate/Gray background, Dark Slate text, Cyan accent) -->
-    <!-- Application Structure Plan: A single-page interactive tutorial with a sticky left-sidebar for navigation and a main content panel. The structure follows the logical flow of a data science project (Basics -> Preprocessing -> Evaluation), using interactive code blocks, before/after data views, and a visual animation for the train/test split. This non-linear navigation combined with a step-by-step workflow enhances learning and exploration over a static document. -->
+    <!-- Application Structure Plan: A single-page interactive tutorial with a sticky left-sidebar for navigation and a main content panel. The structure follows the logical flow of a data science project (Home -> Basics -> Preprocessing -> Evaluation), using interactive code blocks, before/after data views, and a visual animation for the train/test split. This non-linear navigation combined with a step-by-step workflow enhances learning and exploration over a static document. -->
     <!-- Visualization & Content Choices: Report concepts are mapped to interactive elements. Python basics -> Clickable cards with definitions. Code examples -> Interactive code blocks with 'Run' buttons and simulated output. Data cleaning -> Toggles to show before/after states of a DataFrame. Train/Test Split -> An animated visual diagram to demonstrate the concept intuitively. Supervised/Unsupervised -> A clear comparison table. A bar chart using Chart.js will show the target variable distribution. Model Evaluation includes an HTML table for Confusion Matrix and a Chart.js line graph for ROC curve with AUC score. All visuals are built with HTML/CSS or Chart.js Canvas, confirming NO SVG/Mermaid. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,6 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body { font-family: 'Inter', sans-serif; }
         .font-code { font-family: 'Fira Code', monospace; }
@@ -56,6 +57,10 @@
                 <div class="bg-white p-4 rounded-lg shadow-sm">
                     <h2 class="text-lg font-bold text-slate-900 mb-4">Study Guide Sections</h2>
                     <nav id="sidebar-nav">
+                        <h3 class="font-semibold text-slate-600 mb-2">General</h3>
+                        <ul class="space-y-2">
+                             <li><a href="#home" class="nav-link block text-slate-600 hover:text-cyan-600 border-l-2 border-transparent pl-3">Home</a></li>
+                        </ul>
                         <h3 class="font-semibold text-slate-600 mt-4 mb-2">Section 1: Fundamentals</h3>
                         <ul class="space-y-2">
                             <li><a href="#s1-interpreter" class="nav-link block text-slate-600 hover:text-cyan-600 border-l-2 border-transparent pl-3">Python Interpreter</a></li>
@@ -86,6 +91,15 @@
                     <h1 class="text-4xl font-bold text-slate-900">PHI 3207: Interactive Study Guide</h1>
                     <p class="mt-2 text-lg text-slate-600">An interactive guide to Python for Public Health Data Analysis.</p>
                 </header>
+
+                <!-- Home Section -->
+                <section id="home" class="mb-16 scroll-mt-24 text-center bg-white p-8 rounded-lg shadow-sm">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-4">Welcome to Your Python Study Guide!</h2>
+                    <p class="text-lg text-slate-700 leading-relaxed mb-6">
+                        Hello! I'm <strong class="text-cyan-700">Shifat Shahriar Siam</strong>, an undergraduate Public Health student at Jahangirnagar University. I created this interactive study guide to help us all grasp Python concepts more easily, especially for applications in Public Health. Dive in and explore!
+                    </p>
+                    <img src="https://placehold.co/400x200/e0e0e0/555555?text=Jahangirnagar+University" alt="Jahangirnagar University Placeholder" class="mx-auto rounded-lg shadow-md mt-6">
+                </section>
 
                 <!-- Section 1: Fundamentals -->
                 <section id="s1-interpreter" class="mb-16 scroll-mt-24">
@@ -386,6 +400,56 @@ for temp in temps:
             </main>
         </div>
     </div>
+
+    <!-- FOOTER SECTION -->
+    <footer class="bg-slate-900 text-slate-400">
+        <div class="container mx-auto px-6 pt-16 pb-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- About Column -->
+                <div class="col-span-1 md:col-span-2 text-center md:text-left">
+                    <h4 class="text-2xl font-bold text-white mb-4">Shifat Shahriar Siam</h4>
+                    <p class="text-sm leading-relaxed">
+                        A personal platform for sharing knowledge and resources in Public Health and Informatics. Committed to exploring data-driven solutions for a healthier future.
+                    </p>
+                </div>
+                <!-- Contact Info Column -->
+                <div class="text-center md:text-left">
+                    <h4 class="text-xl font-bold text-white mb-4">Contact Info</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start justify-center md:justify-start">
+                            <i class="fas fa-map-marker-alt w-4 mr-2 mt-1 text-slate-400"></i>
+                            <span>21 no Hall, Jahangirnagar University, Savar-1342, Dhaka</span>
+                        </li>
+                        <li class="flex items-start justify-center md:justify-start">
+                            <i class="fas fa-envelope w-4 mr-2 mt-1 text-slate-400"></i>
+                            <a href="mailto:20212954156siam@juniv.edu" class="hover:text-emerald-400 transition-colors">20212954156siam@juniv.edu</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Follow Me Column -->
+                <div class="text-center md:text-left">
+                    <h4 class="text-xl font-bold text-white mb-4">Follow Me</h4>
+                    <div class="flex justify-center md:justify-start space-x-5 text-2xl">
+                        <a href="https://www.facebook.com/shifat.shahriar.siam.2002" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="text-slate-400 hover:text-emerald-400 transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://x.com/realDonaldTrump" target="_blank" rel="noopener noreferrer" aria-label="Twitter" class="text-slate-400 hover:text-emerald-400 transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@aparadisebird" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="text-slate-400 hover:text-emerald-400 transition-colors">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="https://www.instagram.com/ss_siam07/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="text-slate-400 hover:text-emerald-400 transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-12 border-t border-slate-800 pt-6 text-center text-sm">
+                <p>&copy; 2025 Shifat Shahriar Siam. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

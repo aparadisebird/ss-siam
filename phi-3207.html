@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHI 3207 - Interactive Study Guide</title>
+    <!-- Chosen Palette: Calm Harmony (Light Slate/Gray background, Dark Slate text, Cyan accent) -->
+    <!-- Application Structure Plan: A single-page interactive tutorial with a sticky left-sidebar for navigation and a main content panel. The structure follows the logical flow of a data science project (Basics -> Preprocessing -> Evaluation), using interactive code blocks, before/after data views, and a visual animation for the train/test split. This non-linear navigation combined with a step-by-step workflow enhances learning and exploration over a static document. -->
+    <!-- Visualization & Content Choices: Report concepts are mapped to interactive elements. Python basics -> Clickable cards with definitions. Code examples -> Interactive code blocks with 'Run' buttons and simulated output. Data cleaning -> Toggles to show before/after states of a DataFrame. Train/Test Split -> An animated visual diagram to demonstrate the concept intuitively. Supervised/Unsupervised -> A clear comparison table. A bar chart using Chart.js will show the target variable distribution. Model Evaluation includes an HTML table for Confusion Matrix and a Chart.js line graph for ROC curve with AUC score. All visuals are built with HTML/CSS or Chart.js Canvas, confirming NO SVG/Mermaid. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-code { font-family: 'Fira Code', monospace; }
+        .nav-link.active {
+            color: #0891b2; /* cyan-600 */
+            font-weight: 600;
+            border-left-color: #0891b2;
+        }
+        .data-block {
+            transition: all 0.5s ease-in-out;
+            background-color: #f1f5f9; /* slate-100 */
+        }
+        .train-block { background-color: #c7d2fe; /* indigo-200 */ }
+        .test-block { background-color: #fecaca; /* red-200 */ }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            padding: 1rem;
+        }
+        .matrix-cell {
+            padding: 0.75rem;
+            text-align: center;
+            border: 1px solid #e2e8f0; /* slate-200 */
+        }
+        .matrix-header {
+            font-weight: 600;
+            background-color: #f1f5f9; /* slate-100 */
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="md:flex md:space-x-8">
+            <!-- Sticky Sidebar Navigation -->
+            <aside class="w-full md:w-64 md:sticky top-8 self-start mb-8 md:mb-0">
+                <div class="bg-white p-4 rounded-lg shadow-sm">
+                    <h2 class="text-lg font-bold text-slate-900 mb-4">Study Guide Sections</h2>
+                    <nav id="sidebar-nav">
+                        <h3 class="font-semibold text-slate-600 mt-4 mb-2">Section 1: Fundamentals</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#s1-interpreter" class="nav-link block text-slate-600 hover:text-cyan-600 border-l-2 border-transparent pl-3">Python Interpreter</a></li>
+                            <li><a href="#s1-modules" class="nav-link block text-slate-600 hover:text-cyan-600 border-l-2 border-transparent pl-3">Modules & Libraries</a></li>
+                            <li><a href="#s1-syntax" class="nav-link block text-slate-600 hover:text-cyan-600 border-l-2 border-transparent pl-3">Core Syntax</a></li>
+                            <li><a href="#s1-dataframes" class="nav-link block text-slate-600 hover:text-cyan-600 border-l-2 border-transparent pl-3">DataFrames</a></li>
+                             <li><a href="#s1-ml-types" class="nav-link block text-slate-600 hover:text-cyan-600 border-l-2 border-transparent pl-3">ML Types</a></li>
+                        </ul>
+                        <h3 class="font-semibold text-slate-600 mt-6 mb-2">Section 2: Preprocessing</h3>
+                        <ul class="space-y-2">
+                           <li><a href="#s2-imports" class="nav-link block text-slate-600 hover:text-cyan-600 border-l-2 border-transparent pl-3">Key Imports</a></li>
+                           <li><a href="#s2-load-clean" class="nav-link block text-slate-600 hover:text-cyan-600 border-l-2 border-transparent pl-3">Load & Clean Data</a></li>
+                           <li><a href="#s2-missing" class="nav-link block text-slate-600 hover:text-cyan-600 border-l-2 border-transparent pl-3">Handle Missing Data</a></li>
+                           <li><a href="#s2-features" class="nav-link block text-slate-600 hover:text-cyan-600 border-l-2 border-transparent pl-3">Select Features</a></li>
+                           <li><a href="#s2-split" class="nav-link block text-slate-600 hover:text-cyan-600 border-l-2 border-transparent pl-3">Train/Test Split</a></li>
+                        </ul>
+                        <h3 class="font-semibold text-slate-600 mt-6 mb-2">Section 3: Evaluation Metrics</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#s3-evaluation" class="nav-link block text-slate-600 hover:text-cyan-600 border-l-2 border-transparent pl-3">Model Evaluation</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="flex-1">
+                <header class="mb-12 text-center">
+                    <h1 class="text-4xl font-bold text-slate-900">PHI 3207: Interactive Study Guide</h1>
+                    <p class="mt-2 text-lg text-slate-600">An interactive guide to Python for Public Health Data Analysis.</p>
+                </header>
+
+                <!-- Section 1: Fundamentals -->
+                <section id="s1-interpreter" class="mb-16 scroll-mt-24">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-2">Section 1: Fundamentals</h2>
+                    <p class="text-slate-600 mb-6">This section covers the basic concepts of Python, its syntax, and the tools used for data analysis.</p>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="text-xl font-semibold mb-3">What is a Python Interpreter?</h3>
+                        <p class="mb-4">Python is an interpreted language, which means it runs code line by line without requiring a separate compilation step. The interpreter reads a line of your code, translates it, and executes it immediately. This makes development faster and debugging easier, as errors are identified as soon as they are encountered.</p>
+                        <div class="grid md:grid-cols-3 gap-4 text-center">
+                            <div class="bg-slate-100 p-4 rounded">
+                                <span class="text-2xl">⚡️</span>
+                                <h4 class="font-semibold mt-2">No Compilation</h4>
+                                <p class="text-sm text-slate-600">Run code directly.</p>
+                            </div>
+                            <div class="bg-slate-100 p-4 rounded">
+                                <span class="text-2xl">💻</span>
+                                <h4 class="font-semibold mt-2">Cross-Platform</h4>
+                                <p class="text-sm text-slate-600">Works anywhere Python is installed.</p>
+                            </div>
+                             <div class="bg-slate-100 p-4 rounded">
+                                <span class="text-2xl">🐞</span>
+                                <h4 class="font-semibold mt-2">Easier Debugging</h4>
+                                <p class="text-sm text-slate-600">Find errors faster.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="s1-modules" class="mb-16 scroll-mt-24">
+                     <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="text-xl font-semibold mb-3">Modules, Packages, Libraries, and Pip</h3>
+                        <p class="mb-4">These components form the ecosystem for organizing and sharing Python code. Understanding their roles is key to leveraging Python's power.</p>
+                        <div class="space-y-4">
+                            <details class="bg-slate-50 p-3 rounded-lg cursor-pointer">
+                                <summary class="font-semibold">Module</summary>
+                                <p class="mt-2 text-slate-600">A single Python file (`.py`) containing functions and variables. It's the smallest unit of reusable code.</p>
+                            </details>
+                            <details class="bg-slate-50 p-3 rounded-lg cursor-pointer">
+                                <summary class="font-semibold">Package</summary>
+                                <p class="mt-2 text-slate-600">A collection of related modules in a directory. It helps organize a large codebase.</p>
+                            </details>
+                            <details class="bg-slate-50 p-3 rounded-lg cursor-pointer">
+                                <summary class="font-semibold">Library</summary>
+                                <p class="mt-2 text-slate-600">A broad collection of packages and modules for a specific purpose (e.g., `pandas` for data analysis, `scikit-learn` for machine learning).</p>
+                            </details>
+                            <details class="bg-slate-50 p-3 rounded-lg cursor-pointer">
+                                <summary class="font-semibold">Pip</summary>
+                                <p class="mt-2 text-slate-600">The package installer for Python. You use it from your command line to install libraries (e.g., `pip install pandas`).</p>
+                            </details>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="s1-syntax" class="mb-16 scroll-mt-24">
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="text-xl font-semibold mb-3">Interactive Core Syntax</h3>
+                        <p class="mb-4">Test out Python's core syntax. Click the "Run" buttons to see the code execute and display its output in a simulated console.</p>
+                        <!-- If-Else Example -->
+                        <div class="border border-slate-200 rounded-lg p-4 mb-6">
+                            <h4 class="font-semibold mb-2">If-Else Statement</h4>
+                            <p class="text-sm text-slate-600 mb-3">This example classifies a blood glucose level according to public health guidelines.</p>
+                            <div class="bg-slate-800 text-white font-code p-4 rounded-md text-sm">
+                                <pre><code>BG = 110
+if BG < 100:
+    print("Result: ✅ Normal")
+elif 100 <= BG <= 125:
+    print("Result: ⚠️ Pre-diabetes")
+else:
+    print("Result: 🚨 Diabetes")</code></pre>
+                            </div>
+                            <div class="mt-3 flex items-center justify-between">
+                                <button onclick="runCode('if-else-output')" class="bg-cyan-600 text-white px-4 py-2 rounded-md hover:bg-cyan-700 text-sm">Run Code</button>
+                                <div id="if-else-output" class="font-code text-slate-600 bg-slate-100 px-3 py-1 rounded">Output will appear here</div>
+                            </div>
+                        </div>
+                        <!-- For Loop Example -->
+                        <div class="border border-slate-200 rounded-lg p-4">
+                            <h4 class="font-semibold mb-2">For Loop</h4>
+                            <p class="text-sm text-slate-600 mb-3">This loop iterates through a list of patient temperatures to check for fevers.</p>
+                            <div class="bg-slate-800 text-white font-code p-4 rounded-md text-sm">
+                                <pre><code>temps = [36.8, 37.5, 39.1, 38.2]
+for temp in temps:
+    if temp >= 38.0:
+        print(f"{temp}°C - Fever Detected 🚨")
+    else:
+        print(f"{temp}°C - Normal ✅")</code></pre>
+                            </div>
+                            <div class="mt-3 flex items-center justify-between">
+                                <button onclick="runCode('for-loop-output')" class="bg-cyan-600 text-white px-4 py-2 rounded-md hover:bg-cyan-700 text-sm">Run Code</button>
+                                <div id="for-loop-output" class="font-code text-slate-600 bg-slate-100 px-3 py-1 rounded whitespace-pre-wrap text-left">Output will appear here</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="s1-dataframes" class="mb-16 scroll-mt-24">
+                     <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="text-xl font-semibold mb-3">Understanding DataFrames with Pandas</h3>
+                        <p class="mb-4">A DataFrame is the primary data structure in the `pandas` library. It's a 2D table, like a spreadsheet, that holds your data. You can perform powerful operations on it, like selecting, filtering, and cleaning data.</p>
+                        <p class="mb-4">Here we create a simple public health DataFrame. Click the button to see what happens when we use the `.drop()` method to remove a column.</p>
+                        <div id="dataframe-display" class="font-code text-sm p-4 bg-slate-100 rounded-md whitespace-pre-wrap"></div>
+                        <button id="drop-column-btn" class="mt-4 bg-cyan-600 text-white px-4 py-2 rounded-md hover:bg-cyan-700 text-sm">Toggle 'Vaccination_Rate' Column</button>
+                    </div>
+                </section>
+
+                <section id="s1-ml-types" class="mb-16 scroll-mt-24">
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="text-xl font-semibold mb-3">Supervised vs. Unsupervised Learning</h3>
+                        <p class="mb-4">Machine Learning is broadly categorized into two types based on the data used for training. This table provides a quick comparison.</p>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-100">
+                                        <th class="p-3 font-semibold border-b border-slate-200">Feature</th>
+                                        <th class="p-3 font-semibold border-b border-slate-200">Supervised Learning</th>
+                                        <th class="p-3 font-semibold border-b border-slate-200">Unsupervised Learning</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3 border-b border-slate-200 font-semibold">Data</td>
+                                        <td class="p-3 border-b border-slate-200">Uses **labeled** data (has correct answers).</td>
+                                        <td class="p-3 border-b border-slate-200">Uses **unlabeled** data.</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3 border-b border-slate-200 font-semibold">Goal</td>
+                                        <td class="p-3 border-b border-slate-200">Predict outcomes.</td>
+                                        <td class="p-3 border-b border-slate-200">Find hidden patterns.</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="p-3 border-b border-slate-200 font-semibold">Example</td>
+                                        <td class="p-3 border-b border-slate-200">Predicting if a patient has a disease.</td>
+                                        <td class="p-3 border-b border-slate-200">Grouping patients by lifestyle habits.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2: Preprocessing -->
+                <section id="s2-imports" class="mb-16 scroll-mt-24">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-2">Section 2: Data Preprocessing</h2>
+                    <p class="text-slate-600 mb-6">This is the critical workflow for preparing your raw data before feeding it into a machine learning model.</p>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="text-xl font-semibold mb-3">Step 1: Key Imports</h3>
+                        <p class="mb-4">A typical machine learning script starts by importing all the necessary libraries and functions. Hover over each line of code to see its purpose.</p>
+                        <div class="bg-slate-800 text-white font-code p-4 rounded-md text-sm space-y-1">
+                            <p title="For data manipulation and analysis.">import pandas as pd</p>
+                            <p title="To split data into training and testing sets.">from sklearn.model_selection import train_test_split</p>
+                            <p title="A machine learning algorithm for classification.">from sklearn.ensemble import RandomForestClassifier</p>
+                            <p title="To evaluate model performance.">from sklearn.metrics import accuracy_score</p>
+                            <p title="For creating visualizations.">import matplotlib.pyplot as plt</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="s2-load-clean" class="mb-16 scroll-mt-24">
+                     <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="text-xl font-semibold mb-3">Step 2: Load & Clean Data</h3>
+                        <p class="mb-4">First, we load our dataset from a CSV file. Then, we perform initial cleaning, such as dropping columns that are not useful for prediction (like an 'id' column).</p>
+                        <div class="bg-slate-800 text-white font-code p-4 rounded-md text-sm">
+                            <p># Load the dataset</p>
+                            <p>df = pd.read_csv('lung_disease.csv')</p>
+                            <p class="mt-2"># Drop 'id' column</p>
+                            <p>df.drop('id', axis=1, inplace=True)</p>
+                        </div>
+                         <p class="mt-4 text-sm text-slate-600">This action cleans the DataFrame by removing identifier columns that don't provide predictive value for a machine learning model.</p>
+                    </div>
+                </section>
+                
+                <section id="s2-missing" class="mb-16 scroll-mt-24">
+                     <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="text-xl font-semibold mb-3">Step 3: Handle Missing Data</h3>
+                        <p class="mb-4">Real-world data is often incomplete. We must handle missing values (imputation) before training. Here, we identify numeric and categorical columns and fill missing smoker data with 'No'.</p>
+                        <div class="bg-slate-800 text-white font-code p-4 rounded-md text-sm">
+                           <p># Identify column types</p>
+                           <p>numeric_cols = df.select_dtypes(include=['int64', 'float64']).columns</p>
+                           <p>categorical_cols = df.select_dtypes(include=['object']).columns</p>
+                           <p class="mt-2"># Fill missing 'smoker' values</p>
+                           <p>df['smoker'] = df['smoker'].fillna('No')</p>
+                        </div>
+                         <p class="mt-4 text-sm text-slate-600">This strategy assumes that if smoker status is not recorded, the person is a non-smoker. Other strategies include filling with the most frequent value or using advanced imputation methods.</p>
+                    </div>
+                </section>
+
+                <section id="s2-features" class="mb-16 scroll-mt-24">
+                     <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="text-xl font-semibold mb-3">Step 4: Select Features (X) and Target (Y)</h3>
+                        <p class="mb-4">We must separate our data into features (the inputs for the model) and the target (the output we want to predict).</p>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-semibold text-center mb-2">Features (X)</h4>
+                                <div class="bg-slate-800 text-white font-code p-4 rounded-md text-sm">
+                                    <p>features = ['age', 'gender', 'smoker', ...]</p>
+                                    <p>X = df[features]</p>
+                                </div>
+                                <p class="text-xs text-slate-600 mt-2 text-center">The inputs our model uses to learn.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-center mb-2">Target (Y)</h4>
+                                <div class="bg-slate-800 text-white font-code p-4 rounded-md text-sm">
+                                    <p>Y = df['lung_disease']</p>
+                                </div>
+                                <p class="text-xs text-slate-600 mt-2 text-center">The outcome we want to predict.</p>
+                            </div>
+                        </div>
+                         <div class="mt-6">
+                            <h4 class="font-semibold text-center mb-2">Target Variable Distribution</h4>
+                            <p class="text-center text-sm text-slate-600 mb-4">It's good practice to visualize the distribution of your target variable to check for class imbalance.</p>
+                             <div class="chart-container">
+                                <canvas id="target-chart"></canvas>
+                            </div>
+                         </div>
+                    </div>
+                </section>
+                
+                <section id="s2-split" class="mb-16 scroll-mt-24">
+                     <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="text-xl font-semibold mb-3">Step 5: Interactive Train/Test Split</h3>
+                        <p class="mb-4">This is a fundamental step to evaluate your model. We train the model on one part of the data (training set) and then test its performance on a separate, unseen part (testing set). Click the button to visualize the split.</p>
+                        <div class="bg-slate-800 text-white font-code p-4 rounded-md text-sm mb-4">
+                            <p>x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2)</p>
+                        </div>
+                        <div class="w-full h-48 bg-slate-200 rounded-lg p-4 flex flex-col justify-between" id="split-container">
+                             <div class="h-full flex space-x-2" id="data-blocks-container">
+                                <!-- Data blocks will be generated by JS -->
+                            </div>
+                            <div class="flex justify-between text-sm font-semibold mt-2">
+                                <span id="train-label" class="opacity-0">Training Set (80%)</span>
+                                <span id="test-label" class="opacity-0">Testing Set (20%)</span>
+                            </div>
+                        </div>
+                        <button id="split-data-btn" class="mt-4 bg-cyan-600 text-white px-4 py-2 rounded-md hover:bg-cyan-700 text-sm">Visualize Split</button>
+                    </div>
+                </section>
+
+                <!-- Section 3: Model Evaluation Metrics -->
+                <section id="s3-evaluation" class="mb-16 scroll-mt-24">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-2">Section 3: Model Evaluation Metrics</h2>
+                    <p class="text-slate-600 mb-6">After training a machine learning model, it's crucial to evaluate its performance. This section explains key metrics used for classification models, allowing us to understand how well our model predicts outcomes in a public health context.</p>
+
+                    <div class="bg-white p-6 rounded-lg shadow-sm mb-8">
+                        <h3 class="text-xl font-semibold mb-3">Confusion Matrix</h3>
+                        <p class="mb-4">The Confusion Matrix is a table that summarizes the performance of a classification model. It shows the number of correct and incorrect predictions made by the model when compared to the actual outcomes. Understanding its components helps in assessing specific types of prediction errors, which is vital in sensitive areas like disease diagnosis.</p>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm border border-slate-200 rounded-lg">
+                                <thead>
+                                    <tr class="bg-slate-100">
+                                        <th class="matrix-cell"></th>
+                                        <th class="matrix-cell font-semibold text-slate-700" colspan="2">Predicted Class</th>
+                                    </tr>
+                                    <tr class="bg-slate-50">
+                                        <th class="matrix-cell"></th>
+                                        <th class="matrix-cell">Negative (No Disease)</th>
+                                        <th class="matrix-cell">Positive (Has Disease)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="matrix-cell bg-slate-50 font-semibold text-slate-700">Actual Negative (No Disease)</td>
+                                        <td class="matrix-cell text-green-700 font-bold">True Negative (TN)</td>
+                                        <td class="matrix-cell text-red-700 font-bold">False Positive (FP)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="matrix-cell bg-slate-50 font-semibold text-slate-700">Actual Positive (Has Disease)</td>
+                                        <td class="matrix-cell text-red-700 font-bold">False Negative (FN)</td>
+                                        <td class="matrix-cell text-green-700 font-bold">True Positive (TP)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-4 text-sm text-slate-600">
+                            <ul>
+                                <li>**True Positive (TP):** Correctly predicted positive. (e.g., predicted sick, actually sick)</li>
+                                <li>**True Negative (TN):** Correctly predicted negative. (e.g., predicted healthy, actually healthy)</li>
+                                <li>**False Positive (FP):** Incorrectly predicted positive (Type I error, "False Alarm"). (e.g., predicted sick, actually healthy)</li>
+                                <li>**False Negative (FN):** Incorrectly predicted negative (Type II error, "Missed Diagnosis"). (e.g., predicted healthy, actually sick)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="text-xl font-semibold mb-3">ROC Curve and AUC (Area Under the Curve)</h3>
+                        <p class="mb-4">The **Receiver Operating Characteristic (ROC) curve** plots the True Positive Rate (TPR) against the False Positive Rate (FPR) at various threshold settings for a binary classifier. It illustrates how well a model can distinguish between positive and negative classes across different sensitivity levels. The **Area Under the Curve (AUC)** summarizes this performance into a single value, ranging from 0.0 to 1.0. A higher AUC indicates a better performing model.</p>
+                        
+                        <div class="chart-container">
+                            <canvas id="roc-chart"></canvas>
+                        </div>
+                        <p class="text-center mt-4 text-lg font-semibold text-slate-700">Example AUC Score: <span id="auc-score" class="text-cyan-600">0.85</span></p>
+                        <p class="text-sm text-slate-600 text-center mt-2">An AUC of 0.85 means the model has an 85% chance of distinguishing between a randomly chosen positive case and a randomly chosen negative case.</p>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Navigation Logic ---
+            const sections = document.querySelectorAll('main section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            const observerOptions = { rootMargin: '-100px 0px -50% 0px', threshold: 0 };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        navLinks.forEach(link => {
+                            link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+                        });
+                    }
+                });
+            }, observerOptions);
+            
+            sections.forEach(section => observer.observe(section));
+
+            // --- Interactive Syntax Logic ---
+            window.runCode = (outputId) => {
+                const outputEl = document.getElementById(outputId);
+                outputEl.innerHTML = 'Executing...';
+
+                setTimeout(() => {
+                    if (outputId === 'if-else-output') {
+                        outputEl.textContent = 'Result: ⚠️ Pre-diabetes';
+                    } else if (outputId === 'for-loop-output') {
+                        outputEl.innerHTML = '36.8°C - Normal ✅\n37.5°C - Normal ✅\n39.1°C - Fever Detected 🚨\n38.2°C - Fever Detected 🚨';
+                    }
+                }, 500);
+            };
+
+            // --- DataFrame Logic ---
+            const dfDisplay = document.getElementById('dataframe-display');
+            const dropBtn = document.getElementById('drop-column-btn');
+            let columnDropped = false;
+
+            const originalData = `   Area  Population  Cases_of_Flu  Vaccination_Rate
+0   North      150000          1200              0.65
+1   South      200000          1800              0.58
+2    East      120000           950              0.72`;
+
+            const droppedData = `   Area  Population  Cases_of_Flu
+0   North      150000          1200
+1   South      200000          1800
+2    East      120000           950`;
+            
+            dfDisplay.textContent = originalData;
+
+            dropBtn.addEventListener('click', () => {
+                columnDropped = !columnDropped;
+                dfDisplay.textContent = columnDropped ? droppedData : originalData;
+            });
+            
+            // --- Target Chart Logic ---
+            const ctxTarget = document.getElementById('target-chart').getContext('2d');
+            new Chart(ctxTarget, {
+                type: 'bar',
+                data: {
+                    labels: ['No Lung Disease', 'Has Lung Disease'],
+                    datasets: [{
+                        label: '# of Patients',
+                        data: [250, 150], // Example data
+                        backgroundColor: [
+                            'rgba(56, 189, 248, 0.6)', // sky-400
+                            'rgba(248, 113, 113, 0.6)', // red-400
+                        ],
+                        borderColor: [
+                            'rgba(14, 165, 233, 1)', // sky-500
+                            'rgba(239, 68, 68, 1)', // red-500
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: false }
+                    }
+                }
+            });
+
+            // --- Train/Test Split Logic ---
+            const splitBtn = document.getElementById('split-data-btn');
+            const dataContainer = document.getElementById('data-blocks-container');
+            const trainLabel = document.getElementById('train-label');
+            const testLabel = document.getElementById('test-label');
+
+            const createDataBlocks = (count) => {
+                dataContainer.innerHTML = '';
+                for (let i = 0; i < count; i++) {
+                    const block = document.createElement('div');
+                    block.className = 'data-block w-full rounded-sm';
+                    dataContainer.appendChild(block);
+                }
+            };
+            
+            createDataBlocks(10); // Initial state
+
+            splitBtn.addEventListener('click', () => {
+                const blocks = dataContainer.children;
+                trainLabel.classList.add('opacity-0');
+                testLabel.classList.add('opacity-0');
+                
+                // Reset state
+                Array.from(blocks).forEach(block => {
+                    block.classList.remove('train-block', 'test-block');
+                });
+
+                setTimeout(() => {
+                    for (let i = 0; i < blocks.length; i++) {
+                        if (i < 8) { // 80% train
+                            blocks[i].classList.add('train-block');
+                        } else { // 20% test
+                            blocks[i].classList.add('test-block');
+                        }
+                    }
+                    trainLabel.classList.remove('opacity-0');
+                    testLabel.classList.remove('opacity-0');
+                }, 300);
+            });
+
+            // --- ROC Chart Logic ---
+            const ctxRoc = document.getElementById('roc-chart').getContext('2d');
+            new Chart(ctxRoc, {
+                type: 'line',
+                data: {
+                    labels: ['0.0', '0.1', '0.2', '0.3', '0.4', '0.5', '0.6', '0.7', '0.8', '0.9', '1.0'], // FPR
+                    datasets: [
+                        {
+                            label: 'ROC Curve',
+                            data: [0, 0.5, 0.7, 0.85, 0.9, 0.93, 0.95, 0.97, 0.98, 0.99, 1], // TPR
+                            borderColor: '#0891b2', // cyan-600
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.2
+                        },
+                        {
+                            label: 'Random Classifier',
+                            data: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1], // Diagonal line
+                            borderColor: '#cbd5e1', // slate-300
+                            borderWidth: 1,
+                            borderDash: [5, 5],
+                            fill: false,
+                            pointStyle: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'False Positive Rate (FPR)',
+                                color: '#475569' /* slate-600 */
+                            },
+                            beginAtZero: true,
+                            max: 1,
+                            ticks: {
+                                color: '#64748b' /* slate-500 */
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'True Positive Rate (TPR)',
+                                color: '#475569' /* slate-600 */
+                            },
+                            beginAtZero: true,
+                            max: 1,
+                            ticks: {
+                                color: '#64748b' /* slate-500 */
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#475569' /* slate-600 */
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    const index = context[0].dataIndex;
+                                    return `FPR: ${context[0].parsed.x.toFixed(2)}`;
+                                },
+                                label: function(context) {
+                                    return `TPR: ${context.parsed.y.toFixed(2)}`;
+                                }
+                            },
+                            backgroundColor: '#334155', /* slate-700 */
+                            titleColor: '#e2e8f0', /* slate-200 */
+                            bodyColor: '#e2e8f0', /* slate-200 */
+                            padding: 10,
+                            boxPadding: 4,
+                            cornerRadius: 6,
+                            displayColors: true
+                        }
+                    }
+                }
+            });
+
+        });
+    </script>
+
+</body>
+</html>
